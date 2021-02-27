@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
@@ -28,6 +29,7 @@ namespace Mirror.Examples.Basic
 
 
         public GameObject boutonStart;
+        string tructoprint;
 
         /// <summary>
         /// Called on the server when a client adds a new player with ClientScene.AddPlayer.
@@ -51,6 +53,17 @@ namespace Mirror.Examples.Basic
             ResetPlayerNumbers();
         }
 
+        private void Update()
+        {
+
+
+        }
+
+        private void OnGUI()
+        {
+           //GUI.Label(new Rect(10, 10, 100, 20), tructoprint);
+        }
+
         void ResetPlayerNumbers()
         {
             int playerNumber = 0;
@@ -69,14 +82,19 @@ namespace Mirror.Examples.Basic
             playerNumberPublic = playerNumber;
         }
 
-        private void OnGUI()
-        {
-            GUI.Label(new Rect(10, 10, 100, 20), playerNumberPublic.ToString());
-        }
         public void SwitchScene(string sceneToLoad)
         {
-            SceneManager.LoadScene(sceneToLoad);
+            foreach (Player player in playersList)
+            {
+                if (player.isServer)
+                {
+                    player.switchViews = true;
+                    player.RpcSyncVarWithClients(player.switchViews);
+                }
+            }
         }
+
+
 
     }
 }

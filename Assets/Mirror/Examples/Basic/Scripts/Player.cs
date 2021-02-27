@@ -5,6 +5,49 @@ namespace Mirror.Examples.Basic
 {
     public class Player : NetworkBehaviour
     {
+
+        GameObject gameParts;
+        [SyncVar] public bool switchViews = false;
+
+        //this will sync var from server to all clients by calling the "SyncVarWithClientsRpc" funtion on the clients with the value of the variable "varToSync" equals to the value of "example1"
+        [ClientRpc]
+        public void RpcSyncVarWithClients(bool varToSync)
+        {
+            switchViews = varToSync;
+        }
+
+        private void Start()
+        {
+            gameParts = GameObject.FindGameObjectWithTag("GameParts");
+        }
+
+        private void Update()
+        {
+            if (switchViews == true)
+            {
+                if (isClientOnly)
+                {
+                    gameParts.transform.Find("MapPart").gameObject.SetActive(true);
+                    gameParts.transform.Find("LobbyPart").Find("Canvas").gameObject.SetActive(false);
+                }
+                else
+                {
+                    gameParts.transform.Find("GamePart").gameObject.SetActive(true);
+                    gameParts.transform.Find("LobbyPart").Find("Canvas").gameObject.SetActive(false);
+                }
+
+            }
+            
+        }
+
+        private void OnGUI()
+        {
+
+            GUI.Label(new Rect(10, 10, 100, 20), switchViews.ToString());
+            
+        }
+
+
         // Events that the UI will subscribe to
         public event System.Action<int> OnPlayerNumberChanged;
         public event System.Action<Color32> OnPlayerColorChanged;
@@ -51,6 +94,9 @@ namespace Mirror.Examples.Basic
         {
             OnPlayerColorChanged?.Invoke(newPlayerColor);
         }
+
+
+
 
         /// <summary>
         /// This is invoked for NetworkBehaviour objects when they become active on the server.

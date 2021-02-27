@@ -12,6 +12,7 @@ namespace Mirror.Examples.Basic
         public Text playerNameText;
         public Text playerDataText;
 
+        
         Player player;
 
         /// <summary>

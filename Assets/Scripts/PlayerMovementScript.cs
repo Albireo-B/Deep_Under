@@ -9,8 +9,9 @@ public class PlayerMovementScript : MonoBehaviour
     float horizontal;
     float vertical;
     Rigidbody body;
+    public Canvas ui;
     public float speed = 5.0f;
-    int nbProofFound;
+    public int nbProofFound;
 
 
     // Start is called before the first frame update
@@ -33,24 +34,41 @@ public class PlayerMovementScript : MonoBehaviour
         body.velocity = new Vector3(horizontal, 0,  vertical).normalized * speed;
     }
 
+    private void OnTriggerEnter(Collider other)
+    {
+        if (other.tag == "door")
+        {
+            if (nbProofFound>2)
+            {
+                ui.transform.Find("text").GetComponent<UnityEngine.UI.Text>().text = "press space to exit";
+            }
+            else
+            {
+                ui.transform.Find("text").GetComponent<UnityEngine.UI.Text>().text = "not enough evidences to exit";
+            }
+            ui.transform.Find("text").gameObject.SetActive(true);
+        }
+    }
+    private void OnTriggerExit(Collider other)
+    {
+        if (other.tag == "door")
+        {
+            ui.transform.Find("text").gameObject.SetActive(false);
+        }
+    }
+
     private void OnCollisionEnter(Collision collision)
     {
         if (collision.collider.tag == "Monster")
         {
-            ApplicationModel.ending = 0;
-            SceneManager.LoadScene("EndGame");
+            //ApplicationModel.ending = 0;
+            //SceneManager.LoadScene("EndGame");
+            Debug.Log("PAN T MORT");
         }
-
-        //if collision avec la porte de sortie
-        if (collision.collider.tag == "EndDoor")
-        {
-            if (nbProofFound == 3)
-            {
-                ApplicationModel.ending = 1;
-                SceneManager.LoadScene("EndGame");
-            }
-        }
-
     }
+
+
+
+
     //TODO : créer portes de sortie collider, créer scenes de win et loose, créee trucs trouvables et ramassables, me sucer 4 fois. #DébilitéDeGuillaume
 }

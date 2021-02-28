@@ -26,6 +26,8 @@ public class PlayerMovementScript : MonoBehaviour
     bool gameStart = true;
     AudioSource monsterSound;
     private bool musicFadeOutEnabled = false;
+    AudioClip deathScream;
+    AudioSource playerAudioSource;
 
     public string GetLocalIPv4()
     {
@@ -38,6 +40,8 @@ public class PlayerMovementScript : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        playerAudioSource = GetComponent<AudioSource>();
+        deathScream = Resources.Load<AudioClip>("DeathScream");
         monsterSound = transform.Find("monsterSound").GetComponent<AudioSource>();
 
         ui.transform.Find("text").GetComponent<UnityEngine.UI.Text>().text += ("\n your ip : "+ GetLocalIPv4());
@@ -85,6 +89,7 @@ public class PlayerMovementScript : MonoBehaviour
         {
             if (ui.transform.Find("loading").GetComponent<UnityEngine.UI.Slider>().value >= 100)
             {
+                playerAudioSource.Stop();
                 nbProofFound++;
                 ui.transform.Find("evidences").GetComponent<UnityEngine.UI.Text>().text = "Evidences : "+ nbProofFound + " / 3";
                 EvidenceInFront.tag = "Untagged";
@@ -97,11 +102,14 @@ public class PlayerMovementScript : MonoBehaviour
             {
                 ui.transform.Find("loading").gameObject.SetActive(true);
                 ui.transform.Find("loading").GetComponent<UnityEngine.UI.Slider>().value += 0.3f;
+                if (!playerAudioSource.isPlaying)
+                    playerAudioSource.Play();
             }
 
         }
         else
         {
+            playerAudioSource.Stop();
             ui.transform.Find("loading").gameObject.SetActive(false);
             ui.transform.Find("loading").GetComponent<UnityEngine.UI.Slider>().value = 0;
         }

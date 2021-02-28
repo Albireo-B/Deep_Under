@@ -15,12 +15,16 @@ public class PlayerMovementScript : MonoBehaviour
     public int nbProofFound;
     public GameObject PossibleEvidences;
     public Canvas camera2;
+    Animator animator;
+    GameObject movingBody;
     GameObject EvidenceInFront = null;
     bool atTheDoor = false;
 
     // Start is called before the first frame update
     void Start()
     {
+        movingBody = transform.Find("ScientistWalk").gameObject;
+        animator = transform.Find("ScientistWalk").GetComponent<Animator>();
         nbProofFound = 0;
         body = GetComponent<Rigidbody>();
 
@@ -41,10 +45,10 @@ public class PlayerMovementScript : MonoBehaviour
     {
         horizontal = Input.GetAxis("Horizontal");
         vertical = Input.GetAxis("Vertical");
-        if (Input.GetKey("space")&& atTheDoor)
+        if (Input.GetKey("space")&& atTheDoor && nbProofFound == 3)
         {
             Debug.Log("T TROP FORT FRERO");
-            ApplicationModel.ending = 0;
+            ApplicationModel.ending = 1;
             SceneManager.LoadScene("EndGame");
         }
         if (Input.GetKey("space") && EvidenceInFront != null)
@@ -75,7 +79,19 @@ public class PlayerMovementScript : MonoBehaviour
 
     private void FixedUpdate()
     {
-        body.velocity = new Vector3(horizontal, 0,  vertical).normalized * speed;
+        Vector3 normalizedDirection = new Vector3(horizontal, 0, vertical).normalized;
+        body.velocity = normalizedDirection * speed;
+        if (body.velocity != Vector3.zero)
+        {
+            if (animator.speed == 0)
+                animator.speed = 1;
+            movingBody.transform.rotation = Quaternion.LookRotation(body.velocity, Vector3.up);
+        }
+        else
+        {
+            animator.speed = 0;
+        }
+        
     }
 
     private void OnTriggerEnter(Collider other)
@@ -116,9 +132,4 @@ public class PlayerMovementScript : MonoBehaviour
             SceneManager.LoadScene("EndGame");
         }
     }
-
-
-
-
-    //TODO : créer portes de sortie collider, créer scenes de win et loose, créee trucs trouvables et ramassables, me sucer 4 fois. #DébilitéDeGuillaume
 }

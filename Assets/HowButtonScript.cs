@@ -38,6 +38,6 @@ public class HowButtonScript : MonoBehaviour, IPointerEnterHandler, IPointerExit
 
     public void OnPointerClick(PointerEventData eventData)
     {
-        transform.parent.GetComponent<MenuScript>().SwitchScene("3DHorrorScene");
+        transform.parent.GetComponent<MenuScript>().SwitchScene("HowToPlay");
     }
 }

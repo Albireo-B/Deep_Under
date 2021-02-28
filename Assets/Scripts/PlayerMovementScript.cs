@@ -14,6 +14,7 @@ public class PlayerMovementScript : MonoBehaviour
     public float speed = 5.0f;
     public int nbProofFound;
     public GameObject PossibleEvidences;
+    public Canvas camera2;
     GameObject EvidenceInFront = null;
     bool atTheDoor = false;
 
@@ -29,7 +30,9 @@ public class PlayerMovementScript : MonoBehaviour
             Transform randomChild = PossibleEvidences.transform.GetChild(randomChildIdx);
             Vector3 collidSize = randomChild.GetComponent<BoxCollider>().size;
             randomChild.GetComponent<BoxCollider>().size = new Vector3(collidSize.x + 2, collidSize.y, collidSize.z + 2);
-            randomChild.tag = "evidence" ;
+            randomChild.tag = "evidence";
+            //Debug.Log(camera2.GetComponent<cameraAnimation>().Evidences);
+            camera2.GetComponent<cameraAnimation>().Evidences.Add(randomChild.gameObject);
         }
     }
 
@@ -52,6 +55,8 @@ public class PlayerMovementScript : MonoBehaviour
                 ui.transform.Find("evidences").GetComponent<UnityEngine.UI.Text>().text = "Evidences : "+ nbProofFound + " / 3";
                 EvidenceInFront.tag = "Untagged";
                 ui.transform.Find("text").gameObject.SetActive(false);
+                int index = camera2.GetComponent<cameraAnimation>().Evidences.FindIndex(d => d == EvidenceInFront.gameObject);
+                camera2.transform.Find("evidence" + index).gameObject.SetActive(false);
                 EvidenceInFront = null;
             }
             else

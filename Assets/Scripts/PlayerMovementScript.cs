@@ -95,13 +95,12 @@ public class PlayerMovementScript : MonoBehaviour
         body.velocity = normalizedDirection * speed;
         if (body.velocity != Vector3.zero)
         {
-            if (animator.speed == 0)
-                animator.speed = 1;
+            animator.Play("Walking");
             movingBody.transform.rotation = Quaternion.LookRotation(body.velocity, Vector3.up);
         }
         else
         {
-            animator.speed = 0;
+            animator.Play("Idle");
         }
 
     }

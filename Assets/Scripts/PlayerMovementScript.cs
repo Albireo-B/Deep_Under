@@ -2,6 +2,9 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using System.Net;
+using System.Net.Sockets;
+using System;
 
 
 public class PlayerMovementScript : MonoBehaviour
@@ -20,10 +23,21 @@ public class PlayerMovementScript : MonoBehaviour
     GameObject movingBody;
     GameObject EvidenceInFront = null;
     bool atTheDoor = false;
+    bool gameStart = true;
+
+    public string GetLocalIPv4()
+    {
+        IPAddress[] ipv4Addresses = Array.FindAll(
+    Dns.GetHostEntry(string.Empty).AddressList,
+    a => a.AddressFamily == AddressFamily.InterNetwork);
+        return ipv4Addresses[0].ToString();
+    }
 
     // Start is called before the first frame update
     void Start()
     {
+        ui.transform.Find("text").GetComponent<UnityEngine.UI.Text>().text += ("\n your ip : "+ GetLocalIPv4());
+
         movingBody = transform.Find("ScientistWalk").gameObject;
         animator = transform.Find("ScientistWalk").GetComponent<Animator>();
         nbProofFound = 0;
@@ -31,8 +45,13 @@ public class PlayerMovementScript : MonoBehaviour
 
         for (int i = 0; i < 3; i++)
         {
-            int randomChildIdx = Random.Range(0, PossibleEvidences.transform.childCount);
-            Transform randomChild = PossibleEvidences.transform.GetChild(randomChildIdx);
+            int randomChildIdx;
+            Transform randomChild;
+            do
+            {
+                randomChildIdx = UnityEngine.Random.Range(0, PossibleEvidences.transform.childCount);
+                randomChild = PossibleEvidences.transform.GetChild(randomChildIdx);
+            } while (camera2.GetComponent<cameraAnimation>().Evidences.FindIndex(d => d == randomChild.gameObject) != -1);
             Vector3 collidSize = randomChild.GetComponent<BoxCollider>().size;
             randomChild.GetComponent<BoxCollider>().size = new Vector3(collidSize.x + 2, collidSize.y, collidSize.z + 2);
             randomChild.tag = "evidence";
@@ -46,6 +65,11 @@ public class PlayerMovementScript : MonoBehaviour
     {
         horizontal = Input.GetAxis("Horizontal");
         vertical = Input.GetAxis("Vertical");
+        if (Input.GetKey("space") && gameStart)
+        { 
+            ui.transform.Find("text").gameObject.SetActive(false);
+            gameStart = false;
+        }
         if (Input.GetKey("space") && atTheDoor && nbProofFound == 3)
         {
             Debug.Log("T TROP FORT FRERO");

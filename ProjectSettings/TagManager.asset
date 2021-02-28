@@ -7,6 +7,11 @@ TagManager:
   - Monster
   - door
   - evidence
+  - MapPart
+  - GameParts
+  - GamePart
+  - LobbyPart
+  - Light
   layers:
   - Default
   - TransparentFX

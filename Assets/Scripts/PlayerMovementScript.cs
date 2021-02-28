@@ -14,6 +14,7 @@ public class PlayerMovementScript : MonoBehaviour
     public float speed = 5.0f;
     public int nbProofFound;
     public GameObject PossibleEvidences;
+    public float gameTimeMultiplier = 1;
     Animator animator;
     GameObject movingBody;
     GameObject EvidenceInFront = null;
@@ -42,7 +43,7 @@ public class PlayerMovementScript : MonoBehaviour
     {
         horizontal = Input.GetAxis("Horizontal");
         vertical = Input.GetAxis("Vertical");
-        if (Input.GetKey("space")&& atTheDoor && nbProofFound == 3)
+        if (Input.GetKey("space") && atTheDoor && nbProofFound == 3)
         {
             Debug.Log("T TROP FORT FRERO");
             ApplicationModel.ending = 1;
@@ -69,6 +70,17 @@ public class PlayerMovementScript : MonoBehaviour
         {
             ui.transform.Find("loading").gameObject.SetActive(false);
             ui.transform.Find("loading").GetComponent<UnityEngine.UI.Slider>().value = 0;
+        }
+        ui.transform.Find("LightEnergy").GetComponent<UnityEngine.UI.Slider>().value -= 0.35f/gameTimeMultiplier;
+        foreach (GameObject light in GameObject.FindGameObjectsWithTag("Light"))
+        {
+            light.GetComponent<Light>().range = 15 + ui.transform.Find("LightEnergy").GetComponent<UnityEngine.UI.Slider>().value * 0.35f;
+        }
+        if (ui.transform.Find("LightEnergy").GetComponent<UnityEngine.UI.Slider>().value == 0)
+        {
+            Debug.Log("PAN T MORT");
+            ApplicationModel.ending = 0;
+            SceneManager.LoadScene("EndGame");
         }
     }
 

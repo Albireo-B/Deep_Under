@@ -5,6 +5,10 @@ using UnityEngine.SceneManagement;
 
 public class MenuScript : MonoBehaviour
 {
+
+    Ray ray;
+    RaycastHit hit;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -14,13 +18,20 @@ public class MenuScript : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        
+        ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+        if (Physics.Raycast(ray, out hit))
+        {
+            print(hit.collider.name);
+        }
     }
 
     public void SwitchScene(string sceneToLoad)
     {
         SceneManager.LoadScene(sceneToLoad);
     }
+
+
+
 }
 
 public class ApplicationModel

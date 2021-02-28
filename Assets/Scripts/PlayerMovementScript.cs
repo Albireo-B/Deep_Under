@@ -77,6 +77,7 @@ public class PlayerMovementScript : MonoBehaviour
         if (Input.GetKey("space") && atTheDoor && nbProofFound == 3)
         {
             Debug.Log("T TROP FORT FRERO");
+            camera2.transform.Find("lost").gameObject.SetActive(true);
             ApplicationModel.ending = 1;
             SceneManager.LoadScene("EndGame");
         }
@@ -205,6 +206,7 @@ public class PlayerMovementScript : MonoBehaviour
         if (collision.collider.tag == "Monster")
         {
             Debug.Log("PAN T MORT");
+            camera2.transform.Find("lost").gameObject.SetActive(true);
             ApplicationModel.ending = 0;
             SceneManager.LoadScene("EndGame");
         }

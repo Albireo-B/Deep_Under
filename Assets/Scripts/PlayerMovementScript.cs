@@ -14,12 +14,16 @@ public class PlayerMovementScript : MonoBehaviour
     public float speed = 5.0f;
     public int nbProofFound;
     public GameObject PossibleEvidences;
+    Animator animator;
+    GameObject movingBody;
     GameObject EvidenceInFront = null;
     bool atTheDoor = false;
 
     // Start is called before the first frame update
     void Start()
     {
+        movingBody = transform.Find("ScientistWalk").gameObject;
+        animator = transform.Find("ScientistWalk").GetComponent<Animator>();
         nbProofFound = 0;
         body = GetComponent<Rigidbody>();
 
@@ -70,7 +74,19 @@ public class PlayerMovementScript : MonoBehaviour
 
     private void FixedUpdate()
     {
-        body.velocity = new Vector3(horizontal, 0,  vertical).normalized * speed;
+        Vector3 normalizedDirection = new Vector3(horizontal, 0, vertical).normalized;
+        body.velocity = normalizedDirection * speed;
+        if (body.velocity != Vector3.zero)
+        {
+            if (animator.speed == 0)
+                animator.speed = 1;
+            movingBody.transform.rotation = Quaternion.LookRotation(body.velocity, Vector3.up);
+        }
+        else
+        {
+            animator.speed = 0;
+        }
+        
     }
 
     private void OnTriggerEnter(Collider other)

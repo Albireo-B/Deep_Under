@@ -29,11 +29,13 @@ namespace Mirror.Examples.Basic
                 {
                     gameParts.transform.Find("MapPart").gameObject.SetActive(true);
                     gameParts.transform.Find("LobbyPart").Find("Canvas").gameObject.SetActive(false);
+                    gameParts.transform.Find("LobbyPart").Find("MainCamera").gameObject.SetActive(false);
                 }
                 else
                 {
                     gameParts.transform.Find("GamePart").gameObject.SetActive(true);
                     gameParts.transform.Find("LobbyPart").Find("Canvas").gameObject.SetActive(false);
+                    gameParts.transform.Find("LobbyPart").Find("MainCamera").gameObject.SetActive(false);
                 }
 
             }

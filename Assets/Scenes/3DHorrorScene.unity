@@ -630,7 +630,7 @@ MonoBehaviour:
 
 
     Ask a Friend to help you by entering your ip
-    adress in his web browser
+    adress in his web browser (be sure to have executed the webserver.exe)
 
 '
 --- !u!222 &148194326

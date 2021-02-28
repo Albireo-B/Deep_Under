@@ -10,7 +10,6 @@ using System;
 public class PlayerMovementScript : MonoBehaviour
 {
 
-    AudioSource audioSource;
     float horizontal;
     float vertical;
     Rigidbody body;
@@ -25,6 +24,8 @@ public class PlayerMovementScript : MonoBehaviour
     GameObject EvidenceInFront = null;
     bool atTheDoor = false;
     bool gameStart = true;
+    AudioSource monsterSound;
+    private bool musicFadeOutEnabled = false;
 
     public string GetLocalIPv4()
     {
@@ -37,7 +38,8 @@ public class PlayerMovementScript : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        audioSource = GetComponent<AudioSource>();
+        monsterSound = transform.Find("monsterSound").GetComponent<AudioSource>();
+
         ui.transform.Find("text").GetComponent<UnityEngine.UI.Text>().text += ("\n your ip : "+ GetLocalIPv4());
 
         movingBody = transform.Find("ScientistWalk").gameObject;
@@ -82,7 +84,6 @@ public class PlayerMovementScript : MonoBehaviour
         {
             if (ui.transform.Find("loading").GetComponent<UnityEngine.UI.Slider>().value >= 100)
             {
-                audioSource.Stop();
                 nbProofFound++;
                 ui.transform.Find("evidences").GetComponent<UnityEngine.UI.Text>().text = "Evidences : "+ nbProofFound + " / 3";
                 EvidenceInFront.tag = "Untagged";
@@ -93,8 +94,6 @@ public class PlayerMovementScript : MonoBehaviour
             }
             else
             {
-                if (!audioSource.isPlaying)
-                    audioSource.Play();
                 ui.transform.Find("loading").gameObject.SetActive(true);
                 ui.transform.Find("loading").GetComponent<UnityEngine.UI.Slider>().value += 0.3f;
             }
@@ -102,7 +101,6 @@ public class PlayerMovementScript : MonoBehaviour
         }
         else
         {
-            audioSource.Stop();
             ui.transform.Find("loading").gameObject.SetActive(false);
             ui.transform.Find("loading").GetComponent<UnityEngine.UI.Slider>().value = 0;
         }
@@ -116,6 +114,24 @@ public class PlayerMovementScript : MonoBehaviour
             Debug.Log("PAN T MORT");
             ApplicationModel.ending = 0;
             SceneManager.LoadScene("EndGame");
+        }
+
+        if (musicFadeOutEnabled)
+        {
+            if (monsterSound.volume <= 0.1f)
+            {
+                monsterSound.Stop();
+                musicFadeOutEnabled = false;
+            }
+            else
+            {
+                float newVolume = monsterSound.volume - (0.1f * Time.deltaTime);  //change 0.1f to something else to adjust the rate of the volume dropping
+                if (newVolume < 0f)
+                {
+                    newVolume = 0f;
+                }
+                monsterSound.volume = newVolume;
+            }
         }
     }
 
@@ -156,12 +172,32 @@ public class PlayerMovementScript : MonoBehaviour
             ui.transform.Find("text").GetComponent<UnityEngine.UI.Text>().text = "press space to search for evidence";
             ui.transform.Find("text").gameObject.SetActive(true);
         }
+        else if (other.tag == "Monster")
+        {
+            if (!monsterSound.isPlaying)
+            {
+                musicFadeOutEnabled = false;
+                monsterSound.volume = 1;
+                monsterSound.Play();
+                monsterSound.loop = true;
+            }
+
+        }
     }
     private void OnTriggerExit(Collider other)
     {
-        ui.transform.Find("text").gameObject.SetActive(false);
-        EvidenceInFront = null;
-        atTheDoor = false;
+        if (other.tag == "Monster")
+        {
+            musicFadeOutEnabled = true;
+        }
+        else
+        {
+            ui.transform.Find("text").gameObject.SetActive(false);
+            EvidenceInFront = null;
+            atTheDoor = false;
+        }
+        
+
     }
 
     private void OnCollisionEnter(Collision collision)

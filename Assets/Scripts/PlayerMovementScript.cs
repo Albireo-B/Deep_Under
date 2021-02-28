@@ -42,10 +42,10 @@ public class PlayerMovementScript : MonoBehaviour
     {
         horizontal = Input.GetAxis("Horizontal");
         vertical = Input.GetAxis("Vertical");
-        if (Input.GetKey("space")&& atTheDoor)
+        if (Input.GetKey("space")&& atTheDoor && nbProofFound == 3)
         {
             Debug.Log("T TROP FORT FRERO");
-            ApplicationModel.ending = 0;
+            ApplicationModel.ending = 1;
             SceneManager.LoadScene("EndGame");
         }
         if (Input.GetKey("space") && EvidenceInFront != null)
@@ -127,9 +127,4 @@ public class PlayerMovementScript : MonoBehaviour
             SceneManager.LoadScene("EndGame");
         }
     }
-
-
-
-
-    //TODO : créer portes de sortie collider, créer scenes de win et loose, créee trucs trouvables et ramassables, me sucer 4 fois. #DébilitéDeGuillaume
 }

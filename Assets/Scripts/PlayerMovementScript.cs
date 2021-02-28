@@ -10,6 +10,7 @@ using System;
 public class PlayerMovementScript : MonoBehaviour
 {
 
+    AudioSource audioSource;
     float horizontal;
     float vertical;
     Rigidbody body;
@@ -36,6 +37,7 @@ public class PlayerMovementScript : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        audioSource = GetComponent<AudioSource>();
         ui.transform.Find("text").GetComponent<UnityEngine.UI.Text>().text += ("\n your ip : "+ GetLocalIPv4());
 
         movingBody = transform.Find("ScientistWalk").gameObject;
@@ -80,6 +82,7 @@ public class PlayerMovementScript : MonoBehaviour
         {
             if (ui.transform.Find("loading").GetComponent<UnityEngine.UI.Slider>().value >= 100)
             {
+                audioSource.Stop();
                 nbProofFound++;
                 ui.transform.Find("evidences").GetComponent<UnityEngine.UI.Text>().text = "Evidences : "+ nbProofFound + " / 3";
                 EvidenceInFront.tag = "Untagged";
@@ -90,6 +93,8 @@ public class PlayerMovementScript : MonoBehaviour
             }
             else
             {
+                if (!audioSource.isPlaying)
+                    audioSource.Play();
                 ui.transform.Find("loading").gameObject.SetActive(true);
                 ui.transform.Find("loading").GetComponent<UnityEngine.UI.Slider>().value += 0.3f;
             }
@@ -97,6 +102,7 @@ public class PlayerMovementScript : MonoBehaviour
         }
         else
         {
+            audioSource.Stop();
             ui.transform.Find("loading").gameObject.SetActive(false);
             ui.transform.Find("loading").GetComponent<UnityEngine.UI.Slider>().value = 0;
         }

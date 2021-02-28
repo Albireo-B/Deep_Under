@@ -23,19 +23,26 @@ namespace Mirror.Examples.Basic
 
         private void Update()
         {
+            print(switchViews);
             if (switchViews == true)
             {
                 if (isClientOnly)
                 {
                     gameParts.transform.Find("MapPart").gameObject.SetActive(true);
+                    gameParts.transform.Find("GamePart").gameObject.SetActive(true);
                     gameParts.transform.Find("LobbyPart").Find("Canvas").gameObject.SetActive(false);
-                    gameParts.transform.Find("LobbyPart").Find("MainCamera").gameObject.SetActive(false);
+                    gameParts.transform.Find("LobbyPart").Find("Main Camera").gameObject.SetActive(false);
+                    gameParts.transform.Find("GamePart").Find("Player").Find("Camera").gameObject.SetActive(false);
+                    gameParts.transform.Find("GamePart").Find("CanvasPlayer1").gameObject.SetActive(false);
                 }
                 else
                 {
+                    gameParts.transform.Find("MapPart").gameObject.SetActive(true);
                     gameParts.transform.Find("GamePart").gameObject.SetActive(true);
                     gameParts.transform.Find("LobbyPart").Find("Canvas").gameObject.SetActive(false);
-                    gameParts.transform.Find("LobbyPart").Find("MainCamera").gameObject.SetActive(false);
+                    gameParts.transform.Find("LobbyPart").Find("Main Camera").gameObject.SetActive(false);
+                    gameParts.transform.Find("MapPart").Find("CameraPlayer2").gameObject.SetActive(false);
+                    gameParts.transform.Find("MapPart").Find("CanvasPlayer2").gameObject.SetActive(false);
                 }
 
             }

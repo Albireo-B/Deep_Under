@@ -3147,7 +3147,7 @@ MonoBehaviour:
   nbProofFound: 0
   PossibleEvidences: {fileID: 2071104796}
   camera2: {fileID: 31672867}
-  gameTimeMultiplier: 20
+  gameTimeMultiplier: 40
 --- !u!54 &781432340
 Rigidbody:
   m_ObjectHideFlags: 0

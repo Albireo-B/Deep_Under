@@ -664,11 +664,11 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: 'Press space to hide
+  m_Text: 'Press space to hide the hint
 
 
-    Ask a Friend to help you by entering your ip
-    adress in his web browser (be sure to have executed the webserver.exe)
+    Ask a Friend to help you by entering
+    your ip adress in his web browser (be sure to have executed the webserver.exe)
 
 '
 --- !u!222 &148194326
@@ -1923,7 +1923,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!108 &540509893
 Light:
   m_ObjectHideFlags: 0
@@ -6087,7 +6087,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1663702432}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -60.5, y: -6.200001, z: -80.5}
+  m_LocalPosition: {x: -177.7, y: -6.200001, z: -160.3}
   m_LocalScale: {x: 5, y: 5, z: 5}
   m_Children: []
   m_Father: {fileID: 721144505}

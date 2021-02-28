@@ -1,20 +1,34 @@
-﻿using UnityEngine;
+﻿using Mirror;
+using UnityEngine;
 
-namespace Mirror.Examples.Benchmark
+public class PlayerMovement : NetworkBehaviour
 {
-    public class PlayerMovement : NetworkBehaviour
+
+    void handleMovement()
     {
-        public float speed = 5;
-
-        void Update()
+        if (isLocalPlayer)
         {
-            if (!isLocalPlayer) return;
-
-            float h = Input.GetAxis("Horizontal");
-            float v = Input.GetAxis("Vertical");
-
-            Vector3 dir = new Vector3(h, 0, v);
-            transform.position += dir.normalized * (Time.deltaTime * speed);
+            float moveHorizontal = Input.GetAxis("Horizontal");
+            float moveVertical = Input.GetAxis("Vertical");
+            Vector3 movement = new Vector3(moveHorizontal * 0.1f, moveVertical * 0.1f, 0);
+            transform.position = transform.position + movement;
         }
     }
+
+    private void Update()
+    {
+        handleMovement();
+        if (isLocalPlayer && Input.GetKeyDown(KeyCode.X))
+        {
+            Debug.Log("Sending hola to server");
+            Hola();
+        }
+    }
+
+    [Command]
+    void Hola()
+    {
+        Debug.Log("Received Hola from clien");
+    }
 }
+

@@ -152,7 +152,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 244020918}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 533f9469b041e39429affeb2763d66dc, type: 3}
+  m_Script: {fileID: 11500000, guid: ae1e7b916bb6c2c489c5014d28e8f5d5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
 --- !u!114 &244020920
@@ -596,7 +596,7 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 244020919}
-        m_TargetAssemblyTypeName: EndGameScript, Unity.Template.RenderStreaming.Runtime
+        m_TargetAssemblyTypeName: windowScript, Assembly-CSharp
         m_MethodName: SwitchScene
         m_Mode: 5
         m_Arguments:

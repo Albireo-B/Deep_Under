@@ -11,12 +11,12 @@ public class EndGameScript : MonoBehaviour
     {
         if (ApplicationModel.ending == 1)
         {
-            transform.Find("Text").GetComponent<Text>().text = "You win !";
+            transform.Find("win").gameObject.SetActive(true);
 
         }
         else
         {
-            transform.Find("Text").GetComponent<Text>().text = "You loose !";
+            transform.Find("loose").gameObject.SetActive(true);
         }
     }
 

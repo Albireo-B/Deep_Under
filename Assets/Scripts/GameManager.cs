@@ -37,8 +37,25 @@ public class GameManager : MonoBehaviourPunCallbacks, IOnEventCallback
     }
 
     private void Start() {
+        
+        if (!PhotonNetwork.IsMasterClient && photonView.IsMine)
+        {
+            observerView.SetActive(true);
+            runnerView.SetActive(false);
+        }
+
         PauseGame();
-        StartCountdown();
+    }
+
+    private void Update() {
+        
+        
+        if (!gameStarted && PhotonNetwork.IsMasterClient && PhotonNetwork.CurrentRoom.PlayerCount == 2)
+        {
+            Debug.Log(PhotonNetwork.CurrentRoom.PlayerCount);
+            gameStarted = true;
+            StartCountdown();
+        }
     }
 
     private void StartCountdown()
@@ -52,29 +69,9 @@ public class GameManager : MonoBehaviourPunCallbacks, IOnEventCallback
         InitalizeTimer();
     }
 
-    public override void OnPlayerEnteredRoom(Player other)
-    {
-        Debug.Log("here");
-
-        if (!PhotonNetwork.IsMasterClient)
-        {
-            observerView.SetActive(true);
-            runnerView.SetActive(false);
-        }
-
-        if (PhotonNetwork.IsMasterClient && PhotonNetwork.CountOfPlayers == 2 && !gameStarted)
-        {
-            gameStarted = true;
-            StartCountdown();
-        }
-
-    }
-
-    //NOT USED YET
+    //NOT USED YET (not sure if it works though)
     public override void OnPlayerLeftRoom(Player other)
     {
-
-
         if (PhotonNetwork.IsMasterClient)
         {
 

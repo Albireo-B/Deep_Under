@@ -35,7 +35,6 @@ public class BackgroundVoiceScript : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        print(listVoicesSubtitles);
         if (time >= 15)
         {
             time = 0.0f;

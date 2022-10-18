@@ -19,8 +19,8 @@ public class GameManager : MonoBehaviourPunCallbacks, IOnEventCallback
 
     private bool gameStarted = false;
     
-    private Text ui_timer;
-    private Text ui_countdown;
+    [SerializeField] private Text ui_timer;
+    [SerializeField] private Text ui_countdown;
     
     private int currentMatchTime;
     private int currentCountdownTime;
@@ -36,6 +36,11 @@ public class GameManager : MonoBehaviourPunCallbacks, IOnEventCallback
         RefreshTimer
     }
 
+    private void Start() {
+        PauseGame();
+        StartCountdown();
+    }
+
     private void StartCountdown()
     {
         InitalizeCountdown();
@@ -43,11 +48,13 @@ public class GameManager : MonoBehaviourPunCallbacks, IOnEventCallback
 
     private void StartGame()
     {
+        ResumeGame();
         InitalizeTimer();
     }
 
     public override void OnPlayerEnteredRoom(Player other)
     {
+        Debug.Log("here");
 
         if (!PhotonNetwork.IsMasterClient)
         {
@@ -90,10 +97,14 @@ public class GameManager : MonoBehaviourPunCallbacks, IOnEventCallback
 
 
 
-
-
-
-
+    void PauseGame ()
+        {
+            Time.timeScale = 0;
+        }
+    void ResumeGame ()
+        {
+            Time.timeScale = 1;
+        }
 
     #region Timer
 
@@ -132,6 +143,8 @@ public class GameManager : MonoBehaviourPunCallbacks, IOnEventCallback
         if (currentCountdownTime != -1){
             currentCountdownTime = (int) data[1];
             RefreshCountdownUI();
+        } else {
+            HideStartPanel();
         }
         RefreshTimerUI();
     }
@@ -143,7 +156,6 @@ public class GameManager : MonoBehaviourPunCallbacks, IOnEventCallback
         currentMatchTime += 1;
 
         RefreshTimerUI();
-
         RefreshTimers_S();
         timerCoroutine = StartCoroutine(Timer());
     }
@@ -156,7 +168,6 @@ public class GameManager : MonoBehaviourPunCallbacks, IOnEventCallback
         //currentMatchTime = 0;
         //RefreshTimerUI();
     }
-
 
     #endregion
 
@@ -174,13 +185,13 @@ public class GameManager : MonoBehaviourPunCallbacks, IOnEventCallback
 
     private void RefreshCountdownUI()
     {
-        string seconds = (currentCountdownTime % 60).ToString("00");
-        ui_timer.text = $"{seconds}";
+        string seconds = (currentCountdownTime % 60).ToString("0");
+        ui_countdown.text = $"{seconds}";
     }
 
     private IEnumerator Countdown()
     {
-        yield return new WaitForSeconds(1f);
+        yield return new WaitForSecondsRealtime(1f);
 
         currentCountdownTime -= 1;
 
@@ -190,7 +201,8 @@ public class GameManager : MonoBehaviourPunCallbacks, IOnEventCallback
         {
             countdownCoroutine = null;
             currentCountdownTime = -1;
-            //startgame
+            HideStartPanel();
+            StartGame();
         } else {
             RefreshTimers_S();
             countdownCoroutine = StartCoroutine(Countdown());
@@ -219,5 +231,9 @@ public class GameManager : MonoBehaviourPunCallbacks, IOnEventCallback
 
     #endregion
 
+    private void HideStartPanel()
+    {
+        ui_countdown.transform.parent.parent.gameObject.SetActive(false);
+    }
 
 }

@@ -44,7 +44,7 @@ public class PlayerMovementScript : MonoBehaviour
         deathScream = Resources.Load<AudioClip>("DeathScream");
         monsterSound = transform.Find("monsterSound").GetComponent<AudioSource>();
 
-        ui.transform.Find("text").GetComponent<UnityEngine.UI.Text>().text += ("\n your ip : "+ GetLocalIPv4());
+        //ui.transform.Find("text").GetComponent<UnityEngine.UI.Text>().text += ("\n your ip : "+ GetLocalIPv4());
 
         movingBody = transform.Find("ScientistWalk").gameObject;
         animator = transform.Find("ScientistWalk").GetComponent<Animator>();
@@ -75,7 +75,7 @@ public class PlayerMovementScript : MonoBehaviour
         vertical = Input.GetAxis("Vertical");
         if (Input.GetKey("space") && gameStart)
         { 
-            ui.transform.Find("text").gameObject.SetActive(false);
+            //ui.transform.Find("text").gameObject.SetActive(false);
             gameStart = false;
         }
         if (Input.GetKey("space") && atTheDoor && nbProofFound == 3)
@@ -91,9 +91,9 @@ public class PlayerMovementScript : MonoBehaviour
             {
                 playerAudioSource.Stop();
                 nbProofFound++;
-                ui.transform.Find("evidences").GetComponent<UnityEngine.UI.Text>().text = "Evidences : "+ nbProofFound + " / 3";
+                ui.transform.Find("TopRightPanel").Find("Clues").GetComponent<UnityEngine.UI.Text>().text = "Clues : "+ nbProofFound + " / 3";
                 EvidenceInFront.tag = "Untagged";
-                ui.transform.Find("text").gameObject.SetActive(false);
+                //ui.transform.Find("text").gameObject.SetActive(false);
                 int index = camera2.GetComponent<cameraAnimation>().Evidences.FindIndex(d => d == EvidenceInFront.gameObject);
                 camera2.transform.Find("evidence" + index).gameObject.SetActive(false);
                 EvidenceInFront = null;
@@ -113,12 +113,12 @@ public class PlayerMovementScript : MonoBehaviour
             ui.transform.Find("loading").gameObject.SetActive(false);
             ui.transform.Find("loading").GetComponent<UnityEngine.UI.Slider>().value = 0;
         }
-        ui.transform.Find("LightEnergy").GetComponent<UnityEngine.UI.Slider>().value -= 0.35f/gameTimeMultiplier;
+        ui.transform.Find("TopRightPanel").Find("LightEnergy").GetComponent<UnityEngine.UI.Slider>().value -= 0.35f/gameTimeMultiplier;
         foreach (GameObject light in GameObject.FindGameObjectsWithTag("Light"))
         {
-            light.GetComponent<Light>().range = 15 + ui.transform.Find("LightEnergy").GetComponent<UnityEngine.UI.Slider>().value * 0.35f;
+            light.GetComponent<Light>().range = 15 + ui.transform.Find("TopRightPanel").Find("LightEnergy").GetComponent<UnityEngine.UI.Slider>().value * 0.35f;
         }
-        if (ui.transform.Find("LightEnergy").GetComponent<UnityEngine.UI.Slider>().value == 0)
+        if (ui.transform.Find("TopRightPanel").Find("LightEnergy").GetComponent<UnityEngine.UI.Slider>().value == 0)
         {
             Debug.Log("PAN T MORT");
             ApplicationModel.ending = 0;
@@ -167,19 +167,19 @@ public class PlayerMovementScript : MonoBehaviour
             atTheDoor = true;
             if (nbProofFound>2)
             {
-                ui.transform.Find("text").GetComponent<UnityEngine.UI.Text>().text = "press space to exit";
+                ui.transform.Find("DownPanel").Find("ClueText").GetComponent<UnityEngine.UI.Text>().text = "press space to exit";
             }
             else
             {
-                ui.transform.Find("text").GetComponent<UnityEngine.UI.Text>().text = "not enough evidences to exit";
+                ui.transform.Find("DownPanel").Find("ClueText").GetComponent<UnityEngine.UI.Text>().text = "not enough evidences to exit";
             }
-            ui.transform.Find("text").gameObject.SetActive(true);
+            ui.transform.Find("DownPanel").Find("ClueText").gameObject.SetActive(true);
         }
         else if (other.tag == "evidence")
         {
             EvidenceInFront = other.gameObject;
-            ui.transform.Find("text").GetComponent<UnityEngine.UI.Text>().text = "press space to search for evidence";
-            ui.transform.Find("text").gameObject.SetActive(true);
+            ui.transform.Find("DownPanel").Find("ClueText").GetComponent<UnityEngine.UI.Text>().text = "press space to search for evidence";
+            ui.transform.Find("DownPanel").Find("ClueText").gameObject.SetActive(true);
         }
         else if (other.tag == "Monster")
         {
@@ -201,7 +201,7 @@ public class PlayerMovementScript : MonoBehaviour
         }
         else
         {
-            ui.transform.Find("text").gameObject.SetActive(false);
+            ui.transform.Find("DownPanel").Find("ClueText").gameObject.SetActive(false);
             EvidenceInFront = null;
             atTheDoor = false;
         }

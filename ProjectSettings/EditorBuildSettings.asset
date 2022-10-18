@@ -6,22 +6,25 @@ EditorBuildSettings:
   serializedVersion: 2
   m_Scenes:
   - enabled: 0
-    path: Assets/Scenes/SampleScene.unity
-    guid: d1c3109bdb54ad54c8a2b2838528e640
-  - enabled: 1
     path: Assets/Scenes/MainMenuScene.unity
     guid: e94facc50c74fd948ba248351fb18bb0
-  - enabled: 1
+  - enabled: 0
     path: Assets/Scenes/3DHorrorScene.unity
     guid: ba060cac798d3954c9cf6f0919ffdc85
-  - enabled: 0
-    path: 
-    guid: 00000000000000000000000000000000
-  - enabled: 0
-    path: Assets/Scenes/LobbyScene.unity
-    guid: cf0de649e25f16a42a1026aa462d8a69
   - enabled: 1
     path: Assets/Scenes/EndGame.unity
     guid: 2413f1c99aa635649b8a5d6fb9e110fd
+  - enabled: 0
+    path: 
+    guid: 00000000000000000000000000000000
+  - enabled: 1
+    path: Assets/Scenes/LoadingScene.unity
+    guid: 98c3d43fda2d6cb4dabecdbfa63e9d67
+  - enabled: 1
+    path: Assets/Scenes/Lobby.unity
+    guid: 1834a850c9bbb6a4c88ed48576287ce2
+  - enabled: 1
+    path: Assets/Scenes/3DHorrorScenePun.unity
+    guid: 40d8bfefb3b1f0d48bbe549fc5af875c
   m_configObjects:
     com.unity.input.settings: {fileID: 11400000, guid: 8c475301e88a9444cb5598f0e64d1792, type: 2}

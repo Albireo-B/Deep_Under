@@ -29,39 +29,61 @@ public class GameManager : MonoBehaviourPunCallbacks, IOnEventCallback
 
     public enum EventCodes : byte
     {
-        NewPlayer,
-        UpdatePlayers,
-        ChangeStat,
-        NewMatch,
+        StartCountdown,
         RefreshTimer
     }
 
     private void Start() {
         
-        if (!PhotonNetwork.IsMasterClient && photonView.IsMine)
+        if (!PhotonNetwork.IsMasterClient)
         {
             observerView.SetActive(true);
             runnerView.SetActive(false);
+            //StartGameCountdown_S();
+            //this.photonView.RPC("StartGameCountdownRPC", RpcTarget.All);
         }
-
         PauseGame();
     }
 
     private void Update() {
         
-        
-        if (!gameStarted && PhotonNetwork.IsMasterClient && PhotonNetwork.CurrentRoom.PlayerCount == 2)
+        /*if(PhotonNetwork.IsMasterClient)
         {
             Debug.Log(PhotonNetwork.CurrentRoom.PlayerCount);
+            if (!gameStarted && PhotonNetwork.CurrentRoom.PlayerCount == 2)
+            {
+                Debug.Log("2 joueurs");
+                gameStarted = true;
+                //StartCountdown();
+            }
+        }*/
+
+    }
+
+    //Sending the refreshtimer information to all clients
+    public void StartGameCountdown_S()
+    {
+        object[] package = new object[] {};
+
+        Debug.Log("raising Event");
+        PhotonNetwork.RaiseEvent(
+            (byte) EventCodes.StartCountdown,
+            package,
+            new RaiseEventOptions {Receivers = ReceiverGroup.MasterClient},
+            new ExitGames.Client.Photon.SendOptions {Reliability = true}
+        );
+    }  
+
+    //[PunRPC]
+    void StartGameCountdown()
+    {
+        Debug.Log("GO2");
+         if (!gameStarted){
+            InitalizeCountdown();
             gameStarted = true;
-            StartCountdown();
         }
     }
 
-    private void StartCountdown()
-    {
-        InitalizeCountdown();
-    }
 
     private void StartGame()
     {
@@ -91,8 +113,7 @@ public class GameManager : MonoBehaviourPunCallbacks, IOnEventCallback
 
 
 
-
-
+    #region Pause/Play
 
     void PauseGame ()
         {
@@ -102,6 +123,8 @@ public class GameManager : MonoBehaviourPunCallbacks, IOnEventCallback
         {
             Time.timeScale = 1;
         }
+
+    #endregion
 
     #region Timer
 
@@ -208,10 +231,15 @@ public class GameManager : MonoBehaviourPunCallbacks, IOnEventCallback
 
     #endregion countdown
 
-    #region events
+    #region EventsReception
 
     public void OnEvent(EventData photonEvent)
     {
+
+        if (PhotonNetwork.IsMasterClient)
+            Debug.Log("Event received as masterclient");
+        else 
+            Debug.Log("Event received");
         if (photonEvent.Code >= 200) return;
 
         EventCodes e = (EventCodes) photonEvent.Code;
@@ -222,6 +250,9 @@ public class GameManager : MonoBehaviourPunCallbacks, IOnEventCallback
             case EventCodes.RefreshTimer:
                 RefreshTimers_R(o);
                 break;
+            case EventCodes.StartCountdown:
+                StartGameCountdown();
+                break;  
         }
     
     }

@@ -6,15 +6,6 @@ EditorBuildSettings:
   serializedVersion: 2
   m_Scenes:
   - enabled: 0
-    path: Assets/Scenes/MainMenuScene.unity
-    guid: e94facc50c74fd948ba248351fb18bb0
-  - enabled: 0
-    path: Assets/Scenes/3DHorrorScene.unity
-    guid: ba060cac798d3954c9cf6f0919ffdc85
-  - enabled: 0
-    path: 
-    guid: 00000000000000000000000000000000
-  - enabled: 1
     path: Assets/Scenes/LoadingScene.unity
     guid: 98c3d43fda2d6cb4dabecdbfa63e9d67
   - enabled: 1

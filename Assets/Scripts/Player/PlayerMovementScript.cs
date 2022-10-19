@@ -51,7 +51,8 @@ public class PlayerMovementScript : MonoBehaviour
         nbProofFound = 0;
         body = GetComponent<Rigidbody>();
 
-        for (int i = 0; i < 3; i++)
+        //CLUE SPAWNING DO NOT DELETE
+        /*for (int i = 0; i < 3; i++)
         {
             int randomChildIdx;
             Transform randomChild;
@@ -59,13 +60,14 @@ public class PlayerMovementScript : MonoBehaviour
             {
                 randomChildIdx = UnityEngine.Random.Range(0, PossibleEvidences.transform.childCount);
                 randomChild = PossibleEvidences.transform.GetChild(randomChildIdx);
-            } while (camera2.GetComponent<cameraAnimation>().Evidences.FindIndex(d => d == randomChild.gameObject) != -1);
+            } while (camera2.GetComponent<cameraAnimation>().GetClues().FindIndex(d => d == randomChild.gameObject) != -1);
             Vector3 collidSize = randomChild.GetComponent<BoxCollider>().size;
             randomChild.GetComponent<BoxCollider>().size = new Vector3(collidSize.x + 2, collidSize.y, collidSize.z + 2);
             randomChild.tag = "evidence";
             //Debug.Log(camera2.GetComponent<cameraAnimation>().Evidences);
-            camera2.GetComponent<cameraAnimation>().Evidences.Add(randomChild.gameObject);
+            camera2.GetComponent<cameraAnimation>().AddClues(randomChild.gameObject);
         }
+        */
     }
 
     // Update is called once per frame
@@ -94,7 +96,7 @@ public class PlayerMovementScript : MonoBehaviour
                 ui.transform.Find("TopRightPanel").Find("Clues").GetComponent<UnityEngine.UI.Text>().text = "Clues : "+ nbProofFound + " / 3";
                 EvidenceInFront.tag = "Untagged";
                 //ui.transform.Find("text").gameObject.SetActive(false);
-                int index = camera2.GetComponent<cameraAnimation>().Evidences.FindIndex(d => d == EvidenceInFront.gameObject);
+                int index = camera2.GetComponent<cameraAnimation>().GetClues().FindIndex(d => d == EvidenceInFront.gameObject);
                 camera2.transform.Find("evidence" + index).gameObject.SetActive(false);
                 EvidenceInFront = null;
             }

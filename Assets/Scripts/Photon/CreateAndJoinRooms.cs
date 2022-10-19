@@ -14,6 +14,7 @@ public class CreateAndJoinRooms : MonoBehaviourPunCallbacks
     [SerializeField] private int maxPlayers = 2;
     [SerializeField] private bool privateRoom;
 
+
     public void CreateRoom()
     {
         RoomOptions roomOptions = new RoomOptions();
@@ -30,7 +31,8 @@ public class CreateAndJoinRooms : MonoBehaviourPunCallbacks
 
     public override void OnJoinedRoom()
     {
-        PhotonNetwork.LoadLevel("3DHorrorScenePun");
+        if (PhotonNetwork.IsMasterClient)
+            PhotonNetwork.LoadLevel("3DHorrorScenePun");
     }
 
     public void JoinRandomRoom()
@@ -42,4 +44,6 @@ public class CreateAndJoinRooms : MonoBehaviourPunCallbacks
     {
         privateRoom = newVal;
     }
+
+
 }

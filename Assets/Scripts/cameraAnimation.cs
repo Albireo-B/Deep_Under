@@ -1,13 +1,15 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using Photon.Pun;
 
 public class cameraAnimation : MonoBehaviour
 {
 
-    public GameObject Player;
-    public List<GameObject> Evidences = new List<GameObject>();
-    public GameObject Monster;
+    [SerializeField] GameObject player;
+    [SerializeField] GameObject monster;
+
+    private List<GameObject> clues;
 
     // Start is called before the first frame update
     void Start()
@@ -18,12 +20,28 @@ public class cameraAnimation : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        transform.Find("player").position = new Vector3(Player.transform.position.x*4+640, Player.transform.position.z*4+360, 0);
-        transform.Find("monster").position = new Vector3(Monster.transform.position.x*4+640, Monster.transform.position.z*4+360, 0);
-        for (int i = 0; i < Evidences.Count; i++)
+        if (!PhotonNetwork.IsMasterClient)
         {
-            transform.Find("evidence"+i).position = new Vector3(Evidences[i].transform.position.x * 4 + 640, Evidences[i].transform.position.z * 4 + 360, 0);
+            transform.Find("Screen").Find("player").position = new Vector3(player.transform.position.x*4+640, player.transform.position.z*4+360, 0);
+            transform.Find("Screen").Find("monster").position = new Vector3(monster.transform.position.x*4+640, monster.transform.position.z*4+360, 0);
+            //CLUES DISPLAY FOR P2 DO NOT DELETE
+            /*for (int i = 0; i < clues.Count; i++)
+            {
+                transform.Find("evidence"+i).position = new Vector3(clues[i].transform.position.x * 4 + 640, clues[i].transform.position.z * 4 + 360, 0);
+            }*/
         }
+
+    }
+
+    public void AddClues(GameObject newClue)
+    {
+        clues.Add(newClue);
+    }
+
+    
+    public List<GameObject> GetClues()
+    {
+        return clues;
     }
 
 }

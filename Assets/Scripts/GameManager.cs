@@ -54,12 +54,12 @@ namespace Photon.Pun.DeepUnder
             if (!PhotonNetwork.IsMasterClient)
             {
                 observerView.SetActive(true);
-                runnerView.SetActive(false);
-                //StartGameCountdown_S();
-                //this.photonView.RPC("StartGameCountdownRPC", RpcTarget.All);
+                runnerView.transform.Find("HUD").gameObject.SetActive(false);
+
+            } else {
+                observerView.SetActive(false);
             }
             gamePaused = true;
-            //PauseGame();
         }
 
         private void Update() {
@@ -71,7 +71,6 @@ namespace Photon.Pun.DeepUnder
         private void StartGame()
         {
             ResumeGame();
-            //InitalizeTimer();
         }
 
 
@@ -121,7 +120,6 @@ namespace Photon.Pun.DeepUnder
 
         private void OnCountdownTimerIsExpired()
         {
-            //ui_infoText.text = string.Empty;
             StartGame();
         }
 

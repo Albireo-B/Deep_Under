@@ -5,7 +5,7 @@ using UnityEngine.AI;
 
 namespace Photon.Pun.DeepUnder
 {
-    public class MonsterController : MonoBehaviour
+    public class MonsterController : MonoBehaviourPun
     {
 
         NavMeshAgent navMesh;
@@ -21,7 +21,7 @@ namespace Photon.Pun.DeepUnder
         // Update is called once per frame
         void Update()
         {
-            if (!GameManager.Instance.CheckGamePaused()){
+            if (!GameManager.Instance.CheckGamePaused() && PhotonNetwork.IsMasterClient){
                 navMesh.SetDestination(Player.transform.position);
             }
         }

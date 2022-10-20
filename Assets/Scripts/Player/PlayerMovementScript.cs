@@ -8,7 +8,7 @@ using System;
 
 namespace Photon.Pun.DeepUnder
 {
-    public class PlayerMovementScript : MonoBehaviour
+    public class PlayerMovementScript : MonoBehaviourPun
     {
 
         float horizontal;
@@ -75,7 +75,7 @@ namespace Photon.Pun.DeepUnder
         void Update()
         {
 
-            if (!GameManager.Instance.CheckGamePaused()){
+            if (!GameManager.Instance.CheckGamePaused() && PhotonNetwork.IsMasterClient){
 
                 
                 horizontal = Input.GetAxis("Horizontal");

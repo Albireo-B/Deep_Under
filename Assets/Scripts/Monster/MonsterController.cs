@@ -3,21 +3,27 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
 
-public class MonsterController : MonoBehaviour
+namespace Photon.Pun.DeepUnder
 {
-
-    NavMeshAgent navMesh;
-    public GameObject Player;
-
-    // Start is called before the first frame update
-    void Start()
+    public class MonsterController : MonoBehaviour
     {
-        navMesh = GetComponent<NavMeshAgent>();
-    }
 
-    // Update is called once per frame
-    void Update()
-    {
-        navMesh.SetDestination(Player.transform.position);
+        NavMeshAgent navMesh;
+        public GameObject Player;
+
+
+        // Start is called before the first frame update
+        void Start()
+        {
+            navMesh = GetComponent<NavMeshAgent>();
+        }
+
+        // Update is called once per frame
+        void Update()
+        {
+            if (!GameManager.Instance.CheckGamePaused()){
+                navMesh.SetDestination(Player.transform.position);
+            }
+        }
     }
 }

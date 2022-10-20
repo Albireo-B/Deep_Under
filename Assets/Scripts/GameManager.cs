@@ -1,267 +1,236 @@
+using Hashtable = ExitGames.Client.Photon.Hashtable;
+using Photon.Pun.UtilityScripts;
 using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
-using ExitGames.Client.Photon;
 using Photon.Realtime;
 using Photon.Pun;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
-public class GameManager : MonoBehaviourPunCallbacks, IOnEventCallback
+namespace Photon.Pun.DeepUnder
 {
-
-    [SerializeField] private GameObject runnerView;
-    [SerializeField] private GameObject observerView;
-    [SerializeField] private GameObject runnerWaitingText;
-    [SerializeField] private GameObject observerWaitingText;
-
-    [SerializeField] private int timerLength;
-
-    private bool gameStarted = false;
-    
-    [SerializeField] private Text ui_timer;
-    [SerializeField] private Text ui_countdown;
-    
-    private int currentMatchTime;
-    private int currentCountdownTime;
-    private Coroutine timerCoroutine;
-    private Coroutine countdownCoroutine;
-
-    public enum EventCodes : byte
+    public class GameManager : MonoBehaviourPunCallbacks//, IOnEventCallback
     {
-        StartCountdown,
-        RefreshTimer
-    }
 
-    private void Start() {
+        [SerializeField] private GameObject runnerView;
+        [SerializeField] private GameObject observerView;
+        [SerializeField] private GameObject runnerWaitingText;
+        [SerializeField] private GameObject observerWaitingText;
+
+        [SerializeField] private int timerLength;
+
+        private bool gameStarted = false;
+        private bool gamePaused = false;
         
-        if (!PhotonNetwork.IsMasterClient)
+        [SerializeField] private Text ui_timer;
+        [SerializeField] private Text ui_countdown;
+        [SerializeField] private Text ui_infoText;
+
+        private int currentMatchTime;
+        private int currentCountdownTime;
+        private Coroutine timerCoroutine;
+        private Coroutine countdownCoroutine;
+
+        public static GameManager Instance;
+        
+        public enum EventCodes : byte
         {
-            observerView.SetActive(true);
-            runnerView.SetActive(false);
-            //StartGameCountdown_S();
-            //this.photonView.RPC("StartGameCountdownRPC", RpcTarget.All);
+            StartCountdown,
+            RefreshTimer
         }
-        PauseGame();
-    }
 
-    private void Update() {
-        
-        /*if(PhotonNetwork.IsMasterClient)
-        {
-            Debug.Log(PhotonNetwork.CurrentRoom.PlayerCount);
-            if (!gameStarted && PhotonNetwork.CurrentRoom.PlayerCount == 2)
+        private void Awake() {
+            if (Instance == null) { Instance = this; } 
+        }
+
+        private void Start() {
+            
+            Hashtable props = new Hashtable
             {
-                Debug.Log("2 joueurs");
-                gameStarted = true;
-                //StartCountdown();
+                {DeepUnderGame.PLAYER_LOADED_LEVEL, true}
+            };
+            PhotonNetwork.LocalPlayer.SetCustomProperties(props);
+            
+            if (!PhotonNetwork.IsMasterClient)
+            {
+                observerView.SetActive(true);
+                runnerView.SetActive(false);
+                //StartGameCountdown_S();
+                //this.photonView.RPC("StartGameCountdownRPC", RpcTarget.All);
+            }
+            gamePaused = true;
+            //PauseGame();
+        }
+
+        private void Update() {
+            
+
+        }
+
+
+        private void StartGame()
+        {
+            ResumeGame();
+            //InitalizeTimer();
+        }
+
+
+
+
+        #region Pause/Play
+
+        void PauseGame ()
+            {
+                gamePaused = true;
+            }
+        void ResumeGame ()
+            {
+                gamePaused = false;
+            }
+        public bool CheckGamePaused(){return gamePaused;}
+
+        #endregion
+
+
+        #region EventsReception
+
+        /*public void OnEvent(EventData photonEvent)
+        {
+
+            if (PhotonNetwork.IsMasterClient)
+                Debug.Log("Event received as masterclient");
+            else 
+                Debug.Log("Event received");
+            if (photonEvent.Code >= 200) return;
+
+            EventCodes e = (EventCodes) photonEvent.Code;
+            object[] o = (object[]) photonEvent.CustomData;
+
+            switch (e) 
+            {
+                case EventCodes.RefreshTimer:
+                    RefreshTimers_R(o);
+                    break;
+                case EventCodes.StartCountdown:
+                    StartGameCountdown();
+                    break;  
             }
         }*/
 
-    }
+        #endregion
 
-    //Sending the refreshtimer information to all clients
-    public void StartGameCountdown_S()
-    {
-        object[] package = new object[] {};
-
-        Debug.Log("raising Event");
-        PhotonNetwork.RaiseEvent(
-            (byte) EventCodes.StartCountdown,
-            package,
-            new RaiseEventOptions {Receivers = ReceiverGroup.MasterClient},
-            new ExitGames.Client.Photon.SendOptions {Reliability = true}
-        );
-    }  
-
-    //[PunRPC]
-    void StartGameCountdown()
-    {
-        Debug.Log("GO2");
-         if (!gameStarted){
-            InitalizeCountdown();
-            gameStarted = true;
-        }
-    }
-
-
-    private void StartGame()
-    {
-        ResumeGame();
-        InitalizeTimer();
-    }
-
-    //NOT USED YET (not sure if it works though)
-    public override void OnPlayerLeftRoom(Player other)
-    {
-        if (PhotonNetwork.IsMasterClient)
+        private void OnCountdownTimerIsExpired()
         {
-
-        }
-    }
-
-    public override void OnLeftRoom()
-    {
-        SceneManager.LoadScene("LoadingScene");
-    }
-
-    public void LeaveRoom()
-    {
-        PhotonNetwork.LeaveRoom();
-    }
-
-
-
-
-    #region Pause/Play
-
-    void PauseGame ()
-        {
-            Time.timeScale = 0;
-        }
-    void ResumeGame ()
-        {
-            Time.timeScale = 1;
-        }
-
-    #endregion
-
-    #region Timer
-
-    private void InitalizeTimer()
-    {
-        RefreshTimerUI();
-        if (PhotonNetwork.IsMasterClient)
-        {
-            timerCoroutine = StartCoroutine(Timer());
-        }
-    }
-
-    private void RefreshTimerUI()
-    {
-        string minutes = (currentMatchTime / 60).ToString("00");
-        string seconds = (currentMatchTime % 60).ToString("00");
-        ui_timer.text = $"{minutes}:{seconds}";
-    }
-
-    //Sending the refreshtimer information to all clients
-    public void RefreshTimers_S()
-    {
-        object[] package = new object[] {currentMatchTime, currentCountdownTime};
-
-        PhotonNetwork.RaiseEvent(
-            (byte) EventCodes.RefreshTimer,
-            package,
-            new RaiseEventOptions {Receivers = ReceiverGroup.All},
-            new ExitGames.Client.Photon.SendOptions {Reliability = true}
-        );
-    }   
-
-    public void RefreshTimers_R(object[] data)
-    {
-        currentMatchTime = (int) data[0];
-        if (currentCountdownTime != -1){
-            currentCountdownTime = (int) data[1];
-            RefreshCountdownUI();
-        } else {
-            HideStartPanel();
-        }
-        RefreshTimerUI();
-    }
-    
-    private IEnumerator Timer()
-    {
-        yield return new WaitForSeconds(1f);
-
-        currentMatchTime += 1;
-
-        RefreshTimerUI();
-        RefreshTimers_S();
-        timerCoroutine = StartCoroutine(Timer());
-    }
-
-
-    private void EndGame()
-    {
-        if (timerCoroutine != null) StopCoroutine(timerCoroutine);
-
-        //currentMatchTime = 0;
-        //RefreshTimerUI();
-    }
-
-    #endregion
-
-    #region Countdown
-
-    private void InitalizeCountdown()
-    {
-        currentCountdownTime = timerLength;
-        RefreshCountdownUI();
-        if (PhotonNetwork.IsMasterClient)
-        {
-            countdownCoroutine = StartCoroutine(Countdown());
-        }
-    }
-
-    private void RefreshCountdownUI()
-    {
-        string seconds = (currentCountdownTime % 60).ToString("0");
-        ui_countdown.text = $"{seconds}";
-    }
-
-    private IEnumerator Countdown()
-    {
-        yield return new WaitForSecondsRealtime(1f);
-
-        currentCountdownTime -= 1;
-
-        RefreshCountdownUI();
-
-        if(currentCountdownTime <= 0)
-        {
-            countdownCoroutine = null;
-            currentCountdownTime = -1;
-            HideStartPanel();
+            //ui_infoText.text = string.Empty;
             StartGame();
-        } else {
-            RefreshTimers_S();
-            countdownCoroutine = StartCoroutine(Countdown());
         }
-    }
 
-    #endregion countdown
-
-    #region EventsReception
-
-    public void OnEvent(EventData photonEvent)
-    {
-
-        if (PhotonNetwork.IsMasterClient)
-            Debug.Log("Event received as masterclient");
-        else 
-            Debug.Log("Event received");
-        if (photonEvent.Code >= 200) return;
-
-        EventCodes e = (EventCodes) photonEvent.Code;
-        object[] o = (object[]) photonEvent.CustomData;
-
-        switch (e) 
+        private bool CheckAllPlayerLoadedLevel()
         {
-            case EventCodes.RefreshTimer:
-                RefreshTimers_R(o);
-                break;
-            case EventCodes.StartCountdown:
-                StartGameCountdown();
-                break;  
+            foreach (Player p in PhotonNetwork.PlayerList)
+            {
+                object playerLoadedLevel;
+
+                if (p.CustomProperties.TryGetValue(DeepUnderGame.PLAYER_LOADED_LEVEL, out playerLoadedLevel))
+                {
+                    if ((bool) playerLoadedLevel)
+                    {
+                        continue;
+                    }
+                }
+
+                return false;
+            }
+            ui_infoText.text = string.Empty;
+            return true;
         }
-    
+
+        private void EndGame()
+        {
+            if (timerCoroutine != null) StopCoroutine(timerCoroutine);
+
+            //currentMatchTime = 0;
+            //RefreshTimerUI();
+        }
+
+        private void HideStartPanel()
+        {
+            ui_countdown.transform.parent.parent.gameObject.SetActive(false);
+        }
+
+        public override void OnEnable()
+        {
+            base.OnEnable();
+            CountdownTimer.OnCountdownTimerHasExpired += OnCountdownTimerIsExpired;
+        }
+
+        public override void OnDisable()
+        {
+            base.OnDisable();
+            CountdownTimer.OnCountdownTimerHasExpired -= OnCountdownTimerIsExpired;
+        }
+
+
+
+
+        #region PUN CALLBACKS
+
+        public override void OnDisconnected(DisconnectCause cause)
+        {
+            SceneManager.LoadScene("Lobby");
+        }
+
+        public override void OnLeftRoom()
+        {
+            PhotonNetwork.Disconnect();
+        }
+
+        //Maybe close the game -> meaning the runner left
+       /* public override void OnMasterClientSwitched(Player newMasterClient)
+        {
+            if (PhotonNetwork.LocalPlayer.ActorNumber == newMasterClient.ActorNumber)
+            {
+                StartCoroutine(SpawnAsteroid());
+            }
+        }*/
+
+        public override void OnPlayerLeftRoom(Player otherPlayer)
+        {
+            //CheckEndOfGame();
+        }
+
+        public override void OnPlayerPropertiesUpdate(Player targetPlayer, Hashtable changedProps)
+        {
+
+            if (!PhotonNetwork.IsMasterClient)
+            {
+                return;
+            }
+
+            // if there was no countdown yet, the master client (this one) waits until everyone loaded the level and sets a timer start
+            int startTimestamp;
+            bool startTimeIsSet = CountdownTimer.TryGetStartTime(out startTimestamp);
+
+            if (changedProps.ContainsKey(DeepUnderGame.PLAYER_LOADED_LEVEL))
+            {
+                if (CheckAllPlayerLoadedLevel())
+                {
+                    if (!startTimeIsSet)
+                    {
+                        CountdownTimer.SetStartTime();
+                    }
+                }
+                else
+                {
+                    // not all players loaded yet. wait:
+                    Debug.Log("setting text waiting for players! ",this.ui_infoText);
+                    ui_infoText.text = "Waiting for other players...";
+                }
+            }
+        
+        }
+
+        #endregion
+
     }
-
-    #endregion
-
-    private void HideStartPanel()
-    {
-        ui_countdown.transform.parent.parent.gameObject.SetActive(false);
-    }
-
 }

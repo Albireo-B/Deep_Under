@@ -21,6 +21,8 @@ namespace Photon.Pun.DeepUnder
 
         public static GameManager Instance;
 
+        [Header("Game Start")]
+        [SerializeField] private GameObject countdownCanvas;
         
         [Header("Clues")]
         [SerializeField] private GameObject possibleClues;
@@ -34,9 +36,10 @@ namespace Photon.Pun.DeepUnder
         private void Awake() {
             if (Instance == null) { Instance = this; } 
         }
-
         private void Start() {
             
+            clues = new List<GameObject>();
+
             Hashtable props = new Hashtable
             {
                 {DeepUnderGame.PLAYER_LOADED_LEVEL, true}
@@ -54,55 +57,71 @@ namespace Photon.Pun.DeepUnder
             }
             gamePaused = true;
         }
-
         private void Update() {
             
 
         }
 
         #region Clues
+        public int GetGameCluesNb()
+        {
+            return gameCluesNb;
+        }
 
-    public int GetNumberOfProofsFound()
-    {
-        return nbProofFound;
-    }
+        public int GetNumberOfProofsFound()
+        {
+            return nbProofFound;
+        }
 
-    public void AddProofFound()
-    {
-        nbProofFound++;
-    }
+        public void AddProofFound()
+        {
+            nbProofFound++;
+        }
 
-    
-    private void AddClues(GameObject newClue)
-    {
-        clues.Add(newClue);
-    }
+        
+        private void AddClues(GameObject newClue)
+        {
+            clues.Add(newClue);
+        }
 
-    
-    public List<GameObject> GetClues()
-    {
-        return clues;
-    }
+        
+        public List<GameObject> GetClues()
+        {
+            return clues;
+        }
 
-    private void SpawnClues()
-    {
-            for (int i = 0; i < gameCluesNb; i++)
-            {
-                int randomChildIdx;
-                Transform randomChild;
-                do
+        private void SpawnClues()
+        {
+                for (int i = 0; i < gameCluesNb; i++)
                 {
-                    randomChildIdx = UnityEngine.Random.Range(0, possibleClues.transform.childCount);
-                    randomChild = possibleClues.transform.GetChild(randomChildIdx);
-                } while (GetClues().FindIndex(d => d == randomChild.gameObject) != -1);
-                Vector3 collidSize = randomChild.GetComponent<BoxCollider>().size;
-                //randomChild.GetComponent<BoxCollider>().size = new Vector3(collidSize.x + 2, collidSize.y, collidSize.z + 2);
-                randomChild.tag = "Clue";
-                AddClues(randomChild.gameObject);
-            }
-    }
+                    int randomChildIdx;
+                    Transform randomChild;
+                    do
+                    {
+                        randomChildIdx = UnityEngine.Random.Range(0, possibleClues.transform.childCount-1);
+                        randomChild = possibleClues.transform.GetChild(randomChildIdx);
+                    } while (clues.FindIndex(d => d == randomChild.gameObject) != -1);
+                    Vector3 collidSize = randomChild.GetComponent<BoxCollider>().size;
+                    photonView.RPC("ChangeObjectTag", RpcTarget.All, randomChild.gameObject.GetComponent<PhotonView>().ViewID, "Clue");
+                    AddClues(randomChild.gameObject);
+                }
+        }
 
-    #endregion
+        [PunRPC]
+        public void ChangeObjectTag(int gameObjectID, string newTag)
+        {
+            
+            PhotonNetwork.GetPhotonView(gameObjectID).gameObject.tag = newTag;
+            if (newTag == "Clue")
+            {
+                PhotonNetwork.GetPhotonView(gameObjectID).gameObject.transform.Find("ClueIconTransform").gameObject.SetActive(true);
+            } else if (newTag == "Untagged")
+            {
+                PhotonNetwork.GetPhotonView(gameObjectID).gameObject.transform.Find("ClueIconTransform").gameObject.SetActive(false);
+            }
+        }
+
+        #endregion
 
         #region Game end
 
@@ -114,10 +133,16 @@ namespace Photon.Pun.DeepUnder
             double gameTime = GetComponent<MatchTimer>().GetGameTime();
             if (PhotonNetwork.IsMasterClient)
             {
+                PhotonNetwork.Destroy(runnerView.transform.Find("Player").gameObject);
+                PhotonNetwork.Destroy(runnerView.transform.Find("Monster").gameObject);
                 //display other screen + death animation ?
             } else {
                 endGameCanvas.SetActive(true);
-                observerView.SetActive(false);
+                observerView.transform.Find("CanvasObserver").gameObject.SetActive(false);
+                foreach (var clue in clues)
+                {
+                    clue.transform.Find("ClueIconTransform").gameObject.SetActive(false);
+                }
             }
             //display endgame canvas and time and win or loose
         }
@@ -128,7 +153,6 @@ namespace Photon.Pun.DeepUnder
         }
 
         #endregion
-
 
         #region Pause/Play
 
@@ -148,7 +172,10 @@ namespace Photon.Pun.DeepUnder
 
         private void OnCountdownTimerIsExpired()
         {
+            countdownCanvas.SetActive(false);
             ResumeGame();
+            if (PhotonNetwork.IsMasterClient)
+                SpawnClues();
         }
 
         private bool CheckAllPlayerLoadedLevel()

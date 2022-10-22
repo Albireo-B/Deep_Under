@@ -12,7 +12,8 @@ GameObject:
   - component: {fileID: 6885576740927790957}
   - component: {fileID: 6885576740927790956}
   - component: {fileID: 6885576740927790959}
-  - component: {fileID: 6885576740927790958}
+  - component: {fileID: 1734144750}
+  - component: {fileID: 1734144749}
   m_Layer: 5
   m_Name: EndGameCanvas
   m_TagString: Untagged
@@ -104,7 +105,15 @@ MonoBehaviour:
   m_BlockingMask:
     serializedVersion: 2
     m_Bits: 4294967295
---- !u!114 &6885576740927790958
+--- !u!222 &1734144750
+CanvasRenderer:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6885576740927790945}
+  m_CullTransparentMesh: 1
+--- !u!114 &1734144749
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -113,9 +122,24 @@ MonoBehaviour:
   m_GameObject: {fileID: 6885576740927790945}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 533f9469b041e39429affeb2763d66dc, type: 3}
+  m_Script: {fileID: 11500000, guid: 1344c3c82d62a2a41a3576d8abb8e3ea, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  m_Material: {fileID: 0}
+  m_Color: {r: 1, g: 1, b: 1, a: 1}
+  m_RaycastTarget: 1
+  m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
+  m_Maskable: 1
+  m_OnCullStateChanged:
+    m_PersistentCalls:
+      m_Calls: []
+  m_Texture: {fileID: 2800000, guid: 1d165213c39dec04fafae892c7cb95b6, type: 3}
+  m_UVRect:
+    serializedVersion: 2
+    x: 0
+    y: 0
+    width: 1
+    height: 1
 --- !u!1 &6885576740946287583
 GameObject:
   m_ObjectHideFlags: 0
@@ -478,7 +502,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 6885576740927790958}
+      - m_Target: {fileID: 0}
         m_TargetAssemblyTypeName: EndGameScript, Unity.Template.RenderStreaming.Runtime
         m_MethodName: Quit
         m_Mode: 1
@@ -612,7 +636,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 6885576740927790958}
+      - m_Target: {fileID: 0}
         m_TargetAssemblyTypeName: EndGameScript, Unity.Template.RenderStreaming.Runtime
         m_MethodName: SwitchScene
         m_Mode: 5
@@ -621,6 +645,6 @@ MonoBehaviour:
           m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
           m_IntArgument: 0
           m_FloatArgument: 0
-          m_StringArgument: MainMenuScene
+          m_StringArgument: Lobby
           m_BoolArgument: 0
         m_CallState: 2

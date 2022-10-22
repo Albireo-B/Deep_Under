@@ -10,21 +10,23 @@ namespace Photon.Pun.DeepUnder
     public class EndGameScript : MonoBehaviour
     {
 
+        [SerializeField] private GameObject endGameCanvas;
+
         
         private bool gameWon = false;
 
         // Start is called before the first frame update
         void Start()
         {
-            if (ApplicationModel.ending == 1)
+            /*if (ApplicationModel.ending == 1)
             {
-                transform.Find("Text").GetComponent<Text>().text = "You win !";
+                endGameCanvas.transform.Find("Text").GetComponent<Text>().text = "You win !";
 
             }
             else
             {
-                transform.Find("Text").GetComponent<Text>().text = "You loose !";
-            }
+                endGameCanvas.transform.Find("Text").GetComponent<Text>().text = "You loose !";
+            }*/
         }
 
         // Update is called once per frame

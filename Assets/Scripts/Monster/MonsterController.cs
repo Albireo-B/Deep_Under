@@ -21,7 +21,7 @@ namespace Photon.Pun.DeepUnder
         // Update is called once per frame
         void Update()
         {
-            if (!GameManager.Instance.CheckGamePaused() && PhotonNetwork.IsMasterClient){
+            if (!GameManager.Instance.CheckGamePaused() && PhotonNetwork.IsMasterClient && Player != null){
                 navMesh.SetDestination(Player.transform.position);
             }
         }

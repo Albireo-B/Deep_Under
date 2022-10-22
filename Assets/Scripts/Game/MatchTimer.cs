@@ -6,7 +6,7 @@ namespace Photon.Pun.DeepUnder{
     {
         bool timerStarted = false;
         double timerIncrementValue;
-        double startTime;
+        double startTime = -1;
         ExitGames.Client.Photon.Hashtable CustomeValue;
         
         void Start()
@@ -16,12 +16,14 @@ namespace Photon.Pun.DeepUnder{
                     CustomeValue = new ExitGames.Client.Photon.Hashtable();
                     startTime = PhotonNetwork.Time;
                     timerStarted = true;
-                    CustomeValue.Add("StartTime", startTime);
+                    CustomeValue.Add("TimerStartTime", startTime);
                     PhotonNetwork.CurrentRoom.SetCustomProperties(CustomeValue);
                 }
                 else
                 {
-                    startTime = double.Parse(PhotonNetwork.CurrentRoom.CustomProperties["StartTime"].ToString());
+                    if (PhotonNetwork.CurrentRoom.CustomProperties["TimerStartTime"] != null){
+                        startTime = double.Parse(PhotonNetwork.CurrentRoom.CustomProperties["TimerStartTime"].ToString());
+                    }
                     timerStarted = true;
                 }
             }
@@ -33,6 +35,9 @@ namespace Photon.Pun.DeepUnder{
         }
 
         public double GetGameTime(){
+            if (startTime == -1){
+                startTime = double.Parse(PhotonNetwork.CurrentRoom.CustomProperties["TimerStartTime"].ToString());
+            }
             return PhotonNetwork.Time - startTime;
         }
     }

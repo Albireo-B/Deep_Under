@@ -56,7 +56,10 @@ namespace Photon.Pun.DeepUnder
                 
                 horizontal = Input.GetAxis("Horizontal");
                 vertical = Input.GetAxis("Vertical");
-                if (Input.GetKey("space") && atTheDoor && gameManager.GetNumberOfProofsFound() == 3)
+                Debug.Log(atTheDoor);
+                Debug.Log(gameManager.GetNumberOfProofsFound());
+                Debug.Log(gameManager.GetGameCluesNb());
+                if (Input.GetKey("space") && atTheDoor && gameManager.GetNumberOfProofsFound() == gameManager.GetGameCluesNb())
                 {
                     ApplicationModel.ending = 1;
                     gameManager.photonView.RPC("EndGame",RpcTarget.All,true);
@@ -67,8 +70,9 @@ namespace Photon.Pun.DeepUnder
                     {
                         playerAudioSource.Stop();
                         gameManager.AddProofFound();
-                        ui.transform.Find("TopRightPanel").Find("Clues").GetComponent<UnityEngine.UI.Text>().text = "Clues : "+ gameManager.GetNumberOfProofsFound() + " / 3";
-                        EvidenceInFront.tag = "Untagged";
+                        ui.transform.Find("TopRightPanel").Find("Clues").GetComponent<UnityEngine.UI.Text>().text = "Clues : "+ gameManager.GetNumberOfProofsFound() + " / " + gameManager.GetGameCluesNb();
+                        gameManager.photonView.RPC("ChangeObjectTag", RpcTarget.All, EvidenceInFront.GetComponent<PhotonView>().ViewID, "Untagged");
+                        //EvidenceInFront.tag = "Untagged";
                         //ui.transform.Find("text").gameObject.SetActive(false);
                         int index = gameManager.GetClues().FindIndex(d => d == EvidenceInFront.gameObject);
                         //camera2.transform.Find("evidence" + index).gameObject.SetActive(false);
@@ -189,7 +193,6 @@ namespace Photon.Pun.DeepUnder
         {
             if (collision.collider.tag == "Monster")
             {
-                camera2.transform.Find("lost").gameObject.SetActive(true);
                 ApplicationModel.ending = 0;
                 gameManager.photonView.RPC("EndGame",RpcTarget.All,false);
             }

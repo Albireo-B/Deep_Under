@@ -3313,6 +3313,18 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 437196521}
     m_Modifications:
+    - target: {fileID: 2019106345187228896, guid: ed25cb18dbab55548b8946439a6ca5b5, type: 3}
+      propertyPath: m_FontData.m_Alignment
+      value: 4
+      objectReference: {fileID: 0}
+    - target: {fileID: 2236223992412058598, guid: ed25cb18dbab55548b8946439a6ca5b5, type: 3}
+      propertyPath: m_RootOrder
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 2236223992412058598, guid: ed25cb18dbab55548b8946439a6ca5b5, type: 3}
+      propertyPath: m_SizeDelta.x
+      value: 1500
+      objectReference: {fileID: 0}
     - target: {fileID: 6885576740927790945, guid: ed25cb18dbab55548b8946439a6ca5b5, type: 3}
       propertyPath: m_Name
       value: EndGameCanvas
@@ -3409,6 +3421,14 @@ PrefabInstance:
       propertyPath: m_Camera
       value: 
       objectReference: {fileID: 730248699}
+    - target: {fileID: 6885576740962917658, guid: ed25cb18dbab55548b8946439a6ca5b5, type: 3}
+      propertyPath: m_FontData.m_Alignment
+      value: 4
+      objectReference: {fileID: 0}
+    - target: {fileID: 6885576740962917661, guid: ed25cb18dbab55548b8946439a6ca5b5, type: 3}
+      propertyPath: m_SizeDelta.x
+      value: 1500
+      objectReference: {fileID: 0}
     - target: {fileID: 6885576742007769512, guid: ed25cb18dbab55548b8946439a6ca5b5, type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
       value: 

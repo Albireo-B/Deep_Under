@@ -35,9 +35,22 @@ namespace Photon.Pun.DeepUnder
             
         }
 
+        public void DisplayInfos(double gameTime)
+        {
+            if (gameWon)
+                endGameCanvas.transform.Find("Text").gameObject.GetComponent<Text>().text = "Your friend managed to escape with the documents, you win !";
+            else    
+                endGameCanvas.transform.Find("Text").gameObject.GetComponent<Text>().text = "Your friend has been caught, you loose !";
+
+            endGameCanvas.transform.Find("TimeText").gameObject.GetComponent<Text>().text = "Time survived : " + Mathf.Floor((float)gameTime/60) + " minutes and " + 
+            Mathf.Floor((float)gameTime%60) + " seconds";
+            
+        }
+
         public void SetGameWon(bool newGameWon)
         {
             gameWon = newGameWon;
+
         }
 
         public void Quit()
@@ -47,8 +60,8 @@ namespace Photon.Pun.DeepUnder
 
         public void SwitchScene(string sceneToLoad)
         {
-            PhotonNetwork.LeaveLobby();
-            SceneManager.LoadScene(sceneToLoad);
+            PhotonNetwork.Disconnect();
+            PhotonNetwork.LoadLevel(sceneToLoad);
         }
     }
 }

@@ -144,6 +144,8 @@ namespace Photon.Pun.DeepUnder
                     clue.transform.Find("ClueIconTransform").gameObject.SetActive(false);
                 }
             }
+            Debug.Log(gameTime);
+            GetComponent<EndGameScript>().DisplayInfos(gameTime);
             //display endgame canvas and time and win or loose
         }
 

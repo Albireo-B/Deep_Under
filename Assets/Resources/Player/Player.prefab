@@ -778,8 +778,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   ui: {fileID: 0}
   speed: 25
-  nbProofFound: 0
-  PossibleEvidences: {fileID: 0}
   camera2: {fileID: 0}
   gameTimeMultiplier: 200
 --- !u!54 &2997904027522772381
@@ -1202,7 +1200,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 90, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
-  m_AnchoredPosition: {x: 0, y: 8.93}
+  m_AnchoredPosition: {x: 0, y: 9}
   m_SizeDelta: {x: 128, y: 256}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &2917281153916875746

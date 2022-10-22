@@ -16,31 +16,24 @@ namespace Photon.Pun.DeepUnder
         Rigidbody body;
         public Canvas ui;
         public float speed = 5.0f;
-        public int nbProofFound;
-        public GameObject PossibleEvidences;
+
         public Canvas camera2;
         public float gameTimeMultiplier = 1;
         Animator animator;
         GameObject movingBody;
         GameObject EvidenceInFront = null;
         bool atTheDoor = false;
-        bool gameStart = true;
         AudioSource monsterSound;
         private bool musicFadeOutEnabled = false;
         AudioClip deathScream;
         AudioSource playerAudioSource;
 
-    /*    public string GetLocalIPv4()
-        {
-            IPAddress[] ipv4Addresses = Array.FindAll(
-        Dns.GetHostEntry(string.Empty).AddressList,
-        a => a.AddressFamily == AddressFamily.InterNetwork);
-            return ipv4Addresses[0].ToString();
-        }*/
+        private GameManager gameManager;
 
         // Start is called before the first frame update
         void Start()
         {
+            gameManager = GameManager.Instance;
             playerAudioSource = GetComponent<AudioSource>();
             deathScream = Resources.Load<AudioClip>("DeathScream");
             monsterSound = transform.Find("monsterSound").GetComponent<AudioSource>();
@@ -49,59 +42,36 @@ namespace Photon.Pun.DeepUnder
 
             movingBody = transform.Find("ScientistWalk").gameObject;
             animator = transform.Find("ScientistWalk").GetComponent<Animator>();
-            nbProofFound = 0;
             body = GetComponent<Rigidbody>();
 
-            //CLUE SPAWNING DO NOT DELETE
-            /*for (int i = 0; i < 3; i++)
-            {
-                int randomChildIdx;
-                Transform randomChild;
-                do
-                {
-                    randomChildIdx = UnityEngine.Random.Range(0, PossibleEvidences.transform.childCount);
-                    randomChild = PossibleEvidences.transform.GetChild(randomChildIdx);
-                } while (camera2.GetComponent<cameraAnimation>().GetClues().FindIndex(d => d == randomChild.gameObject) != -1);
-                Vector3 collidSize = randomChild.GetComponent<BoxCollider>().size;
-                randomChild.GetComponent<BoxCollider>().size = new Vector3(collidSize.x + 2, collidSize.y, collidSize.z + 2);
-                randomChild.tag = "evidence";
-                //Debug.Log(camera2.GetComponent<cameraAnimation>().Evidences);
-                camera2.GetComponent<cameraAnimation>().AddClues(randomChild.gameObject);
-            }
-            */
+            
         }
 
         // Update is called once per frame
         void Update()
         {
 
-            if (!GameManager.Instance.CheckGamePaused() && PhotonNetwork.IsMasterClient){
+            if (!gameManager.CheckGamePaused() && PhotonNetwork.IsMasterClient){
 
                 
                 horizontal = Input.GetAxis("Horizontal");
                 vertical = Input.GetAxis("Vertical");
-                if (Input.GetKey("space") && gameStart)
-                { 
-                    //ui.transform.Find("text").gameObject.SetActive(false);
-                    gameStart = false;
-                }
-                if (Input.GetKey("space") && atTheDoor && nbProofFound == 3)
+                if (Input.GetKey("space") && atTheDoor && gameManager.GetNumberOfProofsFound() == 3)
                 {
-                    camera2.transform.Find("lost").gameObject.SetActive(true);
                     ApplicationModel.ending = 1;
-                    SceneManager.LoadScene("EndGame");
+                    gameManager.photonView.RPC("EndGame",RpcTarget.All,true);
                 }
                 if (Input.GetKey("space") && EvidenceInFront != null)
                 {
                     if (ui.transform.Find("loading").GetComponent<UnityEngine.UI.Slider>().value >= 100)
                     {
                         playerAudioSource.Stop();
-                        nbProofFound++;
-                        ui.transform.Find("TopRightPanel").Find("Clues").GetComponent<UnityEngine.UI.Text>().text = "Clues : "+ nbProofFound + " / 3";
+                        gameManager.AddProofFound();
+                        ui.transform.Find("TopRightPanel").Find("Clues").GetComponent<UnityEngine.UI.Text>().text = "Clues : "+ gameManager.GetNumberOfProofsFound() + " / 3";
                         EvidenceInFront.tag = "Untagged";
                         //ui.transform.Find("text").gameObject.SetActive(false);
-                        int index = camera2.GetComponent<cameraAnimation>().GetClues().FindIndex(d => d == EvidenceInFront.gameObject);
-                        camera2.transform.Find("evidence" + index).gameObject.SetActive(false);
+                        int index = gameManager.GetClues().FindIndex(d => d == EvidenceInFront.gameObject);
+                        //camera2.transform.Find("evidence" + index).gameObject.SetActive(false);
                         EvidenceInFront = null;
                     }
                     else
@@ -127,7 +97,7 @@ namespace Photon.Pun.DeepUnder
                 if (ui.transform.Find("TopRightPanel").Find("LightEnergy").GetComponent<UnityEngine.UI.Slider>().value == 0)
                 {
                     ApplicationModel.ending = 0;
-                    SceneManager.LoadScene("EndGame");
+                    gameManager.photonView.RPC("EndGame",RpcTarget.All,false);
                 }
 
                 if (musicFadeOutEnabled)
@@ -171,7 +141,7 @@ namespace Photon.Pun.DeepUnder
             if (other.tag == "door")
             {
                 atTheDoor = true;
-                if (nbProofFound>2)
+                if (gameManager.GetNumberOfProofsFound() >2)
                 {
                     ui.transform.Find("DownPanel").Find("ClueText").GetComponent<UnityEngine.UI.Text>().text = "press space to exit";
                 }
@@ -181,7 +151,7 @@ namespace Photon.Pun.DeepUnder
                 }
                 ui.transform.Find("DownPanel").Find("ClueText").gameObject.SetActive(true);
             }
-            else if (other.tag == "evidence")
+            else if (other.tag == "Clue")
             {
                 EvidenceInFront = other.gameObject;
                 ui.transform.Find("DownPanel").Find("ClueText").GetComponent<UnityEngine.UI.Text>().text = "press space to search for evidence";
@@ -219,10 +189,9 @@ namespace Photon.Pun.DeepUnder
         {
             if (collision.collider.tag == "Monster")
             {
-                Debug.Log("PAN T MORT");
                 camera2.transform.Find("lost").gameObject.SetActive(true);
                 ApplicationModel.ending = 0;
-                SceneManager.LoadScene("EndGame");
+                gameManager.photonView.RPC("EndGame",RpcTarget.All,false);
             }
         }
     }

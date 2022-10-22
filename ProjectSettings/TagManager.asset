@@ -6,12 +6,12 @@ TagManager:
   tags:
   - Monster
   - door
-  - evidence
   - MapPart
   - GameParts
   - GamePart
   - LobbyPart
   - Light
+  - Clue
   layers:
   - Default
   - TransparentFX

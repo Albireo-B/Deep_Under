@@ -1,9 +1,8 @@
 using Hashtable = ExitGames.Client.Photon.Hashtable;
 using Photon.Pun.UtilityScripts;
-using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
 using Photon.Realtime;
-using Photon.Pun;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
@@ -11,33 +10,26 @@ namespace Photon.Pun.DeepUnder
 {
     public class GameManager : MonoBehaviourPunCallbacks//, IOnEventCallback
     {
-
+        [Header("GameViews")]
         [SerializeField] private GameObject runnerView;
         [SerializeField] private GameObject observerView;
-        [SerializeField] private GameObject runnerWaitingText;
-        [SerializeField] private GameObject observerWaitingText;
 
-        [SerializeField] private int timerLength;
-
-        private bool gameStarted = false;
         private bool gamePaused = false;
         
-        [SerializeField] private Text ui_timer;
-        [SerializeField] private Text ui_countdown;
+        [Header("InfoText")]
         [SerializeField] private Text ui_infoText;
 
-        private int currentMatchTime;
-        private int currentCountdownTime;
-        private Coroutine timerCoroutine;
-        private Coroutine countdownCoroutine;
-
         public static GameManager Instance;
+
         
-        public enum EventCodes : byte
-        {
-            StartCountdown,
-            RefreshTimer
-        }
+        [Header("Clues")]
+        [SerializeField] private GameObject possibleClues;
+        [SerializeField] private int gameCluesNb;
+        private List<GameObject> clues;
+        private int nbProofFound;
+
+        [Header("Game End")]
+        [SerializeField] private GameObject endGameCanvas;
 
         private void Awake() {
             if (Instance == null) { Instance = this; } 
@@ -53,10 +45,11 @@ namespace Photon.Pun.DeepUnder
             
             if (!PhotonNetwork.IsMasterClient)
             {
-                observerView.SetActive(true);
                 runnerView.transform.Find("HUD").gameObject.SetActive(false);
 
             } else {
+                
+                nbProofFound = 0;
                 observerView.SetActive(false);
             }
             gamePaused = true;
@@ -67,13 +60,74 @@ namespace Photon.Pun.DeepUnder
 
         }
 
+        #region Clues
 
-        private void StartGame()
+    public int GetNumberOfProofsFound()
+    {
+        return nbProofFound;
+    }
+
+    public void AddProofFound()
+    {
+        nbProofFound++;
+    }
+
+    
+    private void AddClues(GameObject newClue)
+    {
+        clues.Add(newClue);
+    }
+
+    
+    public List<GameObject> GetClues()
+    {
+        return clues;
+    }
+
+    private void SpawnClues()
+    {
+            for (int i = 0; i < gameCluesNb; i++)
+            {
+                int randomChildIdx;
+                Transform randomChild;
+                do
+                {
+                    randomChildIdx = UnityEngine.Random.Range(0, possibleClues.transform.childCount);
+                    randomChild = possibleClues.transform.GetChild(randomChildIdx);
+                } while (GetClues().FindIndex(d => d == randomChild.gameObject) != -1);
+                Vector3 collidSize = randomChild.GetComponent<BoxCollider>().size;
+                //randomChild.GetComponent<BoxCollider>().size = new Vector3(collidSize.x + 2, collidSize.y, collidSize.z + 2);
+                randomChild.tag = "Clue";
+                AddClues(randomChild.gameObject);
+            }
+    }
+
+    #endregion
+
+        #region Game end
+
+        [PunRPC]
+        public void EndGame(bool newValGameWon)
         {
-            ResumeGame();
+            GetComponent<MatchTimer>().SetTimerStarted(false);
+            SetGameWon(newValGameWon);
+            double gameTime = GetComponent<MatchTimer>().GetGameTime();
+            if (PhotonNetwork.IsMasterClient)
+            {
+                //display other screen + death animation ?
+            } else {
+                endGameCanvas.SetActive(true);
+                observerView.SetActive(false);
+            }
+            //display endgame canvas and time and win or loose
         }
 
+        public void SetGameWon(bool newVal)
+        {
+            GetComponent<EndGameScript>().SetGameWon(newVal);
+        }
 
+        #endregion
 
 
         #region Pause/Play
@@ -90,37 +144,11 @@ namespace Photon.Pun.DeepUnder
 
         #endregion
 
-
-        #region EventsReception
-
-        /*public void OnEvent(EventData photonEvent)
-        {
-
-            if (PhotonNetwork.IsMasterClient)
-                Debug.Log("Event received as masterclient");
-            else 
-                Debug.Log("Event received");
-            if (photonEvent.Code >= 200) return;
-
-            EventCodes e = (EventCodes) photonEvent.Code;
-            object[] o = (object[]) photonEvent.CustomData;
-
-            switch (e) 
-            {
-                case EventCodes.RefreshTimer:
-                    RefreshTimers_R(o);
-                    break;
-                case EventCodes.StartCountdown:
-                    StartGameCountdown();
-                    break;  
-            }
-        }*/
-
-        #endregion
+        #region GameStart
 
         private void OnCountdownTimerIsExpired()
         {
-            StartGame();
+            ResumeGame();
         }
 
         private bool CheckAllPlayerLoadedLevel()
@@ -143,18 +171,10 @@ namespace Photon.Pun.DeepUnder
             return true;
         }
 
-        private void EndGame()
-        {
-            if (timerCoroutine != null) StopCoroutine(timerCoroutine);
 
-            //currentMatchTime = 0;
-            //RefreshTimerUI();
-        }
+        #endregion
 
-        private void HideStartPanel()
-        {
-            ui_countdown.transform.parent.parent.gameObject.SetActive(false);
-        }
+        #region Enable/Disable
 
         public override void OnEnable()
         {
@@ -168,8 +188,7 @@ namespace Photon.Pun.DeepUnder
             CountdownTimer.OnCountdownTimerHasExpired -= OnCountdownTimerIsExpired;
         }
 
-
-
+        #endregion
 
         #region PUN CALLBACKS
 

@@ -40,8 +40,8 @@ namespace Photon.Pun.DeepUnder
 
             //ui.transform.Find("text").GetComponent<UnityEngine.UI.Text>().text += ("\n your ip : "+ GetLocalIPv4());
 
-            movingBody = transform.Find("ScientistWalk").gameObject;
-            animator = transform.Find("ScientistWalk").GetComponent<Animator>();
+            movingBody = transform.Find("DeepUnderCharacter").gameObject;
+            animator = transform.Find("DeepUnderCharacter").GetComponent<Animator>();
             body = GetComponent<Rigidbody>();
 
             
@@ -137,6 +137,7 @@ namespace Photon.Pun.DeepUnder
             {
                 animator.Play("Idle");
             }
+            //Todo animations die and pickclues
 
         }
 

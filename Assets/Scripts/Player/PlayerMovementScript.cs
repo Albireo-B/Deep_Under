@@ -49,7 +49,7 @@ namespace Photon.Pun.DeepUnder
         void Update()
         {
 
-            if (!gameManager.CheckGamePaused() && PhotonNetwork.IsMasterClient){
+            if (!gameManager.CheckGamePaused() && PhotonNetwork.IsMasterClient && !gameManager.CheckGameEnded()){
 
                 
                 horizontal = Input.GetAxis("Horizontal");
@@ -143,6 +143,7 @@ namespace Photon.Pun.DeepUnder
                 }
                 if (animator.GetInteger("AnimationState")!=animationState){
                     animator.SetInteger("AnimationState",animationState);
+                    //animator.ine
                 }
 
             }

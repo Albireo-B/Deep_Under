@@ -60,7 +60,7 @@ namespace Photon.Pun.DeepUnder
 
         public void SwitchScene(string sceneToLoad)
         {
-            PhotonNetwork.Disconnect();
+            PhotonNetwork.LeaveRoom();
             PhotonNetwork.LoadLevel(sceneToLoad);
         }
     }

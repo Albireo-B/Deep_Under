@@ -27,19 +27,17 @@ namespace Photon.Pun.DeepUnder
         private bool musicFadeOutEnabled = false;
         AudioClip deathScream;
         AudioSource playerAudioSource;
-
+        private bool pickingClue;
         private GameManager gameManager;
 
         // Start is called before the first frame update
         void Start()
         {
+            pickingClue = false;
             gameManager = GameManager.Instance;
             playerAudioSource = GetComponent<AudioSource>();
             deathScream = Resources.Load<AudioClip>("DeathScream");
             monsterSound = transform.Find("monsterSound").GetComponent<AudioSource>();
-
-            //ui.transform.Find("text").GetComponent<UnityEngine.UI.Text>().text += ("\n your ip : "+ GetLocalIPv4());
-
             movingBody = transform.Find("DeepUnderCharacter").gameObject;
             animator = transform.Find("DeepUnderCharacter").GetComponent<Animator>();
             body = GetComponent<Rigidbody>();
@@ -56,9 +54,6 @@ namespace Photon.Pun.DeepUnder
                 
                 horizontal = Input.GetAxis("Horizontal");
                 vertical = Input.GetAxis("Vertical");
-                Debug.Log(atTheDoor);
-                Debug.Log(gameManager.GetNumberOfProofsFound());
-                Debug.Log(gameManager.GetGameCluesNb());
                 if (Input.GetKey("space") && atTheDoor && gameManager.GetNumberOfProofsFound() == gameManager.GetGameCluesNb())
                 {
                     ApplicationModel.ending = 1;
@@ -68,18 +63,17 @@ namespace Photon.Pun.DeepUnder
                 {
                     if (ui.transform.Find("loading").GetComponent<UnityEngine.UI.Slider>().value >= 100)
                     {
+                        pickingClue = false;
                         playerAudioSource.Stop();
                         gameManager.AddProofFound();
                         ui.transform.Find("TopRightPanel").Find("Clues").GetComponent<UnityEngine.UI.Text>().text = "Clues : "+ gameManager.GetNumberOfProofsFound() + " / " + gameManager.GetGameCluesNb();
                         gameManager.photonView.RPC("ChangeObjectTag", RpcTarget.All, EvidenceInFront.GetComponent<PhotonView>().ViewID, "Untagged");
-                        //EvidenceInFront.tag = "Untagged";
-                        //ui.transform.Find("text").gameObject.SetActive(false);
                         int index = gameManager.GetClues().FindIndex(d => d == EvidenceInFront.gameObject);
-                        //camera2.transform.Find("evidence" + index).gameObject.SetActive(false);
                         EvidenceInFront = null;
                     }
                     else
                     {
+                        pickingClue = true;
                         ui.transform.Find("loading").gameObject.SetActive(true);
                         ui.transform.Find("loading").GetComponent<UnityEngine.UI.Slider>().value += 0.3f;
                         if (!playerAudioSource.isPlaying)
@@ -128,16 +122,30 @@ namespace Photon.Pun.DeepUnder
         {
             Vector3 normalizedDirection = new Vector3(horizontal, 0, vertical).normalized;
             body.velocity = normalizedDirection * speed;
-            if (body.velocity != Vector3.zero)
+            if (gameManager.CheckGameEnded()){
+                if (!animator.GetBool("Death"))
+                    animator.SetBool("Death",true);
+            } else 
             {
-                animator.Play("Walking");
-                movingBody.transform.rotation = Quaternion.LookRotation(body.velocity, Vector3.up);
+                int animationState;
+                if (body.velocity != Vector3.zero)
+                {
+                    animationState = 1;
+                    movingBody.transform.rotation = Quaternion.LookRotation(body.velocity, Vector3.up);
+                }
+                else if (pickingClue)
+                {
+                    animationState = 2;
+                }
+                else
+                {
+                    animationState = 0;
+                }
+                if (animator.GetInteger("AnimationState")!=animationState){
+                    animator.SetInteger("AnimationState",animationState);
+                }
+
             }
-            else
-            {
-                animator.Play("Idle");
-            }
-            //Todo animations die and pickclues
 
         }
 
@@ -182,6 +190,7 @@ namespace Photon.Pun.DeepUnder
             }
             else
             {
+                pickingClue = false;
                 ui.transform.Find("DownPanel").Find("ClueText").gameObject.SetActive(false);
                 EvidenceInFront = null;
                 atTheDoor = false;

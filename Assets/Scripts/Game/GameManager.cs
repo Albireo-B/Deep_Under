@@ -32,12 +32,15 @@ namespace Photon.Pun.DeepUnder
 
         [Header("Game End")]
         [SerializeField] private GameObject endGameCanvas;
+        private bool gameEnded;
 
         private void Awake() {
             if (Instance == null) { Instance = this; } 
         }
         private void Start() {
             
+            gameEnded = false;
+
             clues = new List<GameObject>();
 
             Hashtable props = new Hashtable
@@ -57,6 +60,7 @@ namespace Photon.Pun.DeepUnder
             }
             gamePaused = true;
         }
+
         private void Update() {
             
 
@@ -125,18 +129,25 @@ namespace Photon.Pun.DeepUnder
 
         #region Game end
 
+        public bool CheckGameEnded()
+        {
+            return gameEnded;
+        }
+
         [PunRPC]
         public void EndGame(bool newValGameWon)
         {
+            gameEnded = true;
             GetComponent<MatchTimer>().SetTimerStarted(false);
             SetGameWon(newValGameWon);
             double gameTime = GetComponent<MatchTimer>().GetGameTime();
             if (PhotonNetwork.IsMasterClient)
             {
-                PhotonNetwork.Destroy(runnerView.transform.Find("Player").gameObject);
-                PhotonNetwork.Destroy(runnerView.transform.Find("Monster").gameObject);
-                //display other screen + death animation ?
+                Destroy(runnerView.transform.Find("Monster").gameObject);
+                //display other screen 
             } else {
+                Destroy(runnerView.transform.Find("Monster").gameObject);
+                Destroy(runnerView.transform.Find("Player").gameObject);
                 endGameCanvas.SetActive(true);
                 observerView.transform.Find("CanvasObserver").gameObject.SetActive(false);
                 foreach (var clue in clues)
@@ -144,9 +155,7 @@ namespace Photon.Pun.DeepUnder
                     clue.transform.Find("ClueIconTransform").gameObject.SetActive(false);
                 }
             }
-            Debug.Log(gameTime);
             GetComponent<EndGameScript>().DisplayInfos(gameTime);
-            //display endgame canvas and time and win or loose
         }
 
         public void SetGameWon(bool newVal)

@@ -143,8 +143,8 @@ namespace Photon.Pun.DeepUnder
             double gameTime = GetComponent<MatchTimer>().GetGameTime();
             if (PhotonNetwork.IsMasterClient)
             {
+                runnerView.transform.Find("Player").gameObject.GetComponent<Rigidbody>().constraints = RigidbodyConstraints.FreezeAll;
                 Destroy(runnerView.transform.Find("Monster").gameObject);
-                //display other screen 
             } else {
                 Destroy(runnerView.transform.Find("Monster").gameObject);
                 Destroy(runnerView.transform.Find("Player").gameObject);

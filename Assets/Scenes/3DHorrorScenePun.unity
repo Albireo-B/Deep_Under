@@ -2769,10 +2769,6 @@ PrefabInstance:
       propertyPath: sceneViewId
       value: 1
       objectReference: {fileID: 0}
-    - target: {fileID: 1527523661270829935, guid: 2beef53f53ee2cf498cf6230da5548b6, type: 3}
-      propertyPath: m_IsActive
-      value: 1
-      objectReference: {fileID: 0}
     - target: {fileID: 2997904027522772376, guid: 2beef53f53ee2cf498cf6230da5548b6, type: 3}
       propertyPath: m_Name
       value: Player
@@ -2785,10 +2781,6 @@ PrefabInstance:
       propertyPath: camera2
       value: 
       objectReference: {fileID: 31672867}
-    - target: {fileID: 2997904027522772378, guid: 2beef53f53ee2cf498cf6230da5548b6, type: 3}
-      propertyPath: PossibleEvidences
-      value: 
-      objectReference: {fileID: 2071104796}
     - target: {fileID: 2997904027522772379, guid: 2beef53f53ee2cf498cf6230da5548b6, type: 3}
       propertyPath: m_RootOrder
       value: 5
@@ -2832,10 +2824,6 @@ PrefabInstance:
     - target: {fileID: 2997904027522772379, guid: 2beef53f53ee2cf498cf6230da5548b6, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 2997904027623608104, guid: 2beef53f53ee2cf498cf6230da5548b6, type: 3}
-      propertyPath: m_CullingMask.m_Bits
-      value: 791
       objectReference: {fileID: 0}
     - target: {fileID: 6684114337386352423, guid: 2beef53f53ee2cf498cf6230da5548b6, type: 3}
       propertyPath: m_Camera

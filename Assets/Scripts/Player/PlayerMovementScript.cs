@@ -123,8 +123,10 @@ namespace Photon.Pun.DeepUnder
             Vector3 normalizedDirection = new Vector3(horizontal, 0, vertical).normalized;
             body.velocity = normalizedDirection * speed;
             if (gameManager.CheckGameEnded()){
-                if (!animator.GetBool("Death"))
+                if (!animator.GetBool("Death")){
                     animator.SetBool("Death",true);
+                    GetComponent<Animation>().Play();
+                }
             } else 
             {
                 int animationState;

@@ -149,7 +149,7 @@ namespace Photon.Pun.DeepUnder
                 if (other.tag == "door")
                 {
                     atTheDoor = true;
-                    if (gameManager.GetNumberOfProofsFound() >2)
+                    if (gameManager.GetNumberOfProofsFound() == gameManager.GetGameCluesNb())
                     {
                         ui.transform.Find("DownPanel").Find("ClueText").GetComponent<UnityEngine.UI.Text>().text = "press space to exit";
                     }

@@ -165,23 +165,13 @@ namespace Photon.Pun.DeepUnder
                     ui.transform.Find("DownPanel").Find("ClueText").GetComponent<UnityEngine.UI.Text>().text = "press space to search for evidence";
                     ui.transform.Find("DownPanel").Find("ClueText").gameObject.SetActive(true);
                 }
-                ui.transform.Find("DownPanel").Find("ClueText").gameObject.SetActive(true);
-            }
-            else if (other.tag == "linkedDoor")
-            {
-                transform.position = other.GetComponent<DoorScript>()
-                    .linkedDoor.GetComponent<DoorScript>()
-                    .enterwaypoint.position;
-            }
-            else if (other.tag == "Clue")
-            {
-                EvidenceInFront = other.gameObject;
-                ui.transform.Find("DownPanel").Find("ClueText").GetComponent<UnityEngine.UI.Text>().text = "press space to search for evidence";
-                ui.transform.Find("DownPanel").Find("ClueText").gameObject.SetActive(true);
-            }
-            else if (other.tag == "Monster")
-            {
-                if (!monsterSound.isPlaying)
+                else if (other.tag == "linkedDoor")
+                {
+                    transform.position = other.GetComponent<DoorScript>()
+                        .linkedDoor.GetComponent<DoorScript>()
+                        .enterwaypoint.position;
+                }
+                else if (other.tag == "Monster")
                 {
                     if (!monsterSound.isPlaying)
                     {

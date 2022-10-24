@@ -11,7 +11,7 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Scenes/Lobby.unity
     guid: 1834a850c9bbb6a4c88ed48576287ce2
-  - enabled: 1
+  - enabled: 0
     path: Assets/Scenes/3DHorrorScenePun.unity
     guid: 40d8bfefb3b1f0d48bbe549fc5af875c
   - enabled: 0

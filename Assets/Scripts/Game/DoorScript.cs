@@ -1,11 +1,13 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.AI;
 
 public class DoorScript : MonoBehaviour
 {
 
     [SerializeField] public Transform enterwaypoint;
+    [SerializeField] public Transform navmeshjump;
 
     [SerializeField] public GameObject linkedDoor;
     [SerializeField] public bool isExitDoor = false;
@@ -24,6 +26,8 @@ public class DoorScript : MonoBehaviour
     public void linkdoor(GameObject doortolink)
     {
         linkedDoor = doortolink;
+        GetComponent<OffMeshLink>().startTransform = navmeshjump;
+        GetComponent<OffMeshLink>().endTransform = doortolink.GetComponent<DoorScript>().navmeshjump;
     }
     //called once at start if it is the exit door
     public void makeExitDoor()

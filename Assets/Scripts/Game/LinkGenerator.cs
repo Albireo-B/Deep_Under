@@ -42,7 +42,7 @@ public class LinkGenerator : MonoBehaviour
             roomstolink[i + 1][0].GetComponent<DoorScript>().linkdoor(roomstolink[i][1]);
         }
         
-        while (roomstolink.Count < 1)
+        while (roomstolink.Count > 1)
         {
             shufflerooms();
             //fill the rest of the room door link one by one

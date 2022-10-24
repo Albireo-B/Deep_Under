@@ -31,5 +31,10 @@ namespace Photon.Pun.DeepUnder
             RoomNameText.text = name;
             RoomPlayersText.text = currentPlayers + " / " + maxPlayers;
         }
+
+        public void UpdatePlayerCount()
+        {
+            //RoomPlayersText.text = currentPlayers + " / " + maxPlayers;
+        }
     }
 }

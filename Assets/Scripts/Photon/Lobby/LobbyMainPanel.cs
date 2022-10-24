@@ -172,7 +172,6 @@ namespace Photon.Pun.DeepUnder
         {
             Destroy(playerListEntries[otherPlayer.ActorNumber].gameObject);
             playerListEntries.Remove(otherPlayer.ActorNumber);
-
             StartGameButton.gameObject.SetActive(CheckPlayersReady());
         }
 
@@ -227,7 +226,7 @@ namespace Photon.Pun.DeepUnder
             byte.TryParse(MaxObserversInputField.text, out maxObservers);
             maxObservers = (byte) (Mathf.Clamp(maxObservers, 1, 5) + 1 );
 
-            RoomOptions options = new RoomOptions {MaxPlayers = maxObservers, PlayerTtl = 10000 };
+            RoomOptions options = new RoomOptions {MaxPlayers = maxObservers, PlayerTtl = 0};
 
             PhotonNetwork.CreateRoom(roomName, options, null);
         }

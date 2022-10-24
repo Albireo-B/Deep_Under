@@ -531,7 +531,7 @@ OffMeshLink:
   m_CostOverride: -1
   m_BiDirectional: 0
   m_Activated: 1
-  m_AutoUpdatePositions: 0
+  m_AutoUpdatePositions: 1
 --- !u!1 &7432417100247535476
 GameObject:
   m_ObjectHideFlags: 0

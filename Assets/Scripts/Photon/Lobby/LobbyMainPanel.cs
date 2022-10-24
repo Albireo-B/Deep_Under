@@ -215,12 +215,17 @@ namespace Photon.Pun.DeepUnder
 
         public void OnHowToPlayClicked()
         {
-            //TODO
+            transform.Find("HowToPlayPanel").gameObject.SetActive(true);
         }
 
         public void OnCreditsClicked()
         {
-            //TODO
+            transform.Find("CreditPanel").gameObject.SetActive(true);
+        }
+
+        public void HidePanel(string panelToHide)
+        {
+            transform.Find(panelToHide).gameObject.SetActive(false);
         }
 
         public void OnPlayClicked()

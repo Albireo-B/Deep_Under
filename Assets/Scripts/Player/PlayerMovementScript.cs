@@ -154,7 +154,7 @@ namespace Photon.Pun.DeepUnder
             if (other.tag == "door")
             {
                 atTheDoor = true;
-                if (gameManager.GetNumberOfProofsFound() >2)
+                if (gameManager.GetNumberOfProofsFound() > 2)
                 {
                     ui.transform.Find("DownPanel").Find("ClueText").GetComponent<UnityEngine.UI.Text>().text = "press space to exit";
                 }
@@ -163,6 +163,12 @@ namespace Photon.Pun.DeepUnder
                     ui.transform.Find("DownPanel").Find("ClueText").GetComponent<UnityEngine.UI.Text>().text = "not enough evidences to exit";
                 }
                 ui.transform.Find("DownPanel").Find("ClueText").gameObject.SetActive(true);
+            }
+            else if (other.tag == "linkedDoor")
+            {
+                transform.position = other.GetComponent<DoorScript>()
+                    .linkedDoor.GetComponent<DoorScript>()
+                    .enterwaypoint.position;
             }
             else if (other.tag == "Clue")
             {

@@ -274,7 +274,7 @@ namespace Photon.Pun.DeepUnder
             PhotonNetwork.CurrentRoom.IsOpen = false;
             PhotonNetwork.CurrentRoom.IsVisible = false;
 
-            PhotonNetwork.LoadLevel("3DHorrorScenePun");
+            PhotonNetwork.LoadLevel("3DHorrorScenePun 1");
         }
 
         #endregion

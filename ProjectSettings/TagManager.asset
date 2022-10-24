@@ -12,6 +12,7 @@ TagManager:
   - LobbyPart
   - Light
   - Clue
+  - linkedDoor
   layers:
   - Default
   - TransparentFX

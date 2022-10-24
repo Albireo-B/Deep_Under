@@ -17,5 +17,8 @@ EditorBuildSettings:
   - enabled: 0
     path: Assets/Scenes/EndGame.unity
     guid: 2413f1c99aa635649b8a5d6fb9e110fd
+  - enabled: 1
+    path: Assets/Scenes/3DHorrorScenePun 1.unity
+    guid: 289254391a3de01499e7c676b0b622bc
   m_configObjects:
     com.unity.input.settings: {fileID: 11400000, guid: 8c475301e88a9444cb5598f0e64d1792, type: 2}

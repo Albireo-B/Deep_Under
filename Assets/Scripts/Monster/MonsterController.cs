@@ -28,7 +28,6 @@ namespace Photon.Pun.DeepUnder
         private void OnTriggerEnter(Collider other)
         {
             //if what monster touch is a door and the door is on him, he tp
-            Debug.Log(Vector3.Distance(other.transform.position, transform.position));
             if (other.tag == "linkedDoor" && Vector3.Distance(other.transform.position, transform.position)<15)
             {
                 navMesh.Warp(other.GetComponent<DoorScript>()

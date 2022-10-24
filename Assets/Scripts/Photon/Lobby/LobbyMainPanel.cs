@@ -172,7 +172,6 @@ namespace Photon.Pun.DeepUnder
         {
             Destroy(playerListEntries[otherPlayer.ActorNumber].gameObject);
             playerListEntries.Remove(otherPlayer.ActorNumber);
-
             StartGameButton.gameObject.SetActive(CheckPlayersReady());
         }
 
@@ -208,6 +207,33 @@ namespace Photon.Pun.DeepUnder
 
         #region UI CALLBACKS
 
+
+        public void OnQuitClicked()
+        {
+            Application.Quit();
+        }
+
+        public void OnHowToPlayClicked()
+        {
+            transform.Find("HowToPlayPanel").gameObject.SetActive(true);
+        }
+
+        public void OnCreditsClicked()
+        {
+            transform.Find("CreditPanel").gameObject.SetActive(true);
+        }
+
+        public void HidePanel(string panelToHide)
+        {
+            transform.Find(panelToHide).gameObject.SetActive(false);
+        }
+
+        public void OnPlayClicked()
+        {
+            transform.Find("MenuPanel").gameObject.SetActive(false);
+            transform.Find("LoginPanel").gameObject.SetActive(true);
+        }
+        
         public void OnBackButtonClicked()
         {
             if (PhotonNetwork.InLobby)
@@ -227,7 +253,7 @@ namespace Photon.Pun.DeepUnder
             byte.TryParse(MaxObserversInputField.text, out maxObservers);
             maxObservers = (byte) (Mathf.Clamp(maxObservers, 1, 5) + 1 );
 
-            RoomOptions options = new RoomOptions {MaxPlayers = maxObservers, PlayerTtl = 10000 };
+            RoomOptions options = new RoomOptions {MaxPlayers = maxObservers, PlayerTtl = 0};
 
             PhotonNetwork.CreateRoom(roomName, options, null);
         }

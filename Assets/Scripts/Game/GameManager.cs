@@ -5,6 +5,7 @@ using UnityEngine;
 using Photon.Realtime;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
+using System.Collections;
 
 namespace Photon.Pun.DeepUnder
 {
@@ -32,7 +33,11 @@ namespace Photon.Pun.DeepUnder
 
         [Header("Game End")]
         [SerializeField] private GameObject endGameCanvas;
+        [SerializeField] private GameObject deathScreen;
         private bool gameEnded;
+        
+        [Header("Menu")]
+        [SerializeField] private GameObject menuCanvas;
 
         private void Awake() {
             if (Instance == null) { Instance = this; } 
@@ -63,8 +68,29 @@ namespace Photon.Pun.DeepUnder
 
         private void Update() {
             
-
+            if (Input.GetKeyDown(KeyCode.Escape))
+            {
+                if (menuCanvas.activeSelf)
+                    menuCanvas.SetActive(false);
+                else
+                    menuCanvas.SetActive(true);
+            }
         }
+
+        #region Menu
+
+        public void LeaveGame()
+        {
+            PhotonNetwork.LeaveRoom();
+            //SceneManager.LoadScene("Lobby");
+        }
+
+        public void Back()
+        {
+            menuCanvas.SetActive(false);
+        }
+
+        #endregion
 
         #region Clues
         public int GetGameCluesNb()
@@ -107,14 +133,16 @@ namespace Photon.Pun.DeepUnder
                     } while (clues.FindIndex(d => d == randomChild.gameObject) != -1);
                     Vector3 collidSize = randomChild.GetComponent<BoxCollider>().size;
                     photonView.RPC("ChangeObjectTag", RpcTarget.All, randomChild.gameObject.GetComponent<PhotonView>().ViewID, "Clue");
-                    AddClues(randomChild.gameObject);
                 }
         }
 
         [PunRPC]
         public void ChangeObjectTag(int gameObjectID, string newTag)
         {
-            
+            if (!PhotonNetwork.IsMasterClient && newTag == "Untagged")
+            {
+                AddClues(PhotonNetwork.GetPhotonView(gameObjectID).gameObject);
+            }
             PhotonNetwork.GetPhotonView(gameObjectID).gameObject.tag = newTag;
             if (newTag == "Clue")
             {
@@ -143,8 +171,12 @@ namespace Photon.Pun.DeepUnder
             double gameTime = GetComponent<MatchTimer>().GetGameTime();
             if (PhotonNetwork.IsMasterClient)
             {
+                runnerView.transform.Find("Player").gameObject.GetComponent<Rigidbody>().constraints = RigidbodyConstraints.FreezeAll;
+                //To avoid the monster collider to push the player or force itself into walls
                 Destroy(runnerView.transform.Find("Monster").gameObject);
-                //display other screen 
+                runnerView.transform.Find("HUD").gameObject.SetActive(false);
+                runnerView.GetComponent<BackgroundVoiceScript>().enabled = false;
+                StartCoroutine(DelayedDeathScreenAnimation());
             } else {
                 Destroy(runnerView.transform.Find("Monster").gameObject);
                 Destroy(runnerView.transform.Find("Player").gameObject);
@@ -156,6 +188,13 @@ namespace Photon.Pun.DeepUnder
                 }
             }
             GetComponent<EndGameScript>().DisplayInfos(gameTime);
+        }
+
+        // The delay coroutine
+        IEnumerator DelayedDeathScreenAnimation ()
+        {
+            yield return new WaitForSeconds(2.5f);
+            deathScreen.GetComponent<Animation>().Play();
         }
 
         public void SetGameWon(bool newVal)
@@ -233,6 +272,7 @@ namespace Photon.Pun.DeepUnder
         public override void OnDisconnected(DisconnectCause cause)
         {
             SceneManager.LoadScene("Lobby");
+            
         }
 
         public override void OnLeftRoom()
@@ -240,17 +280,15 @@ namespace Photon.Pun.DeepUnder
             PhotonNetwork.Disconnect();
         }
 
-        //Maybe close the game -> meaning the runner left
-       /* public override void OnMasterClientSwitched(Player newMasterClient)
+        
+        public override void OnMasterClientSwitched(Player newMasterClient)
         {
-            if (PhotonNetwork.LocalPlayer.ActorNumber == newMasterClient.ActorNumber)
-            {
-                StartCoroutine(SpawnAsteroid());
-            }
-        }*/
+            PhotonNetwork.Disconnect();
+        }
 
         public override void OnPlayerLeftRoom(Player otherPlayer)
         {
+            //SceneManager.LoadScene("Lobby");
             //CheckEndOfGame();
         }
 

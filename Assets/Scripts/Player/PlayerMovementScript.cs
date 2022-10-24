@@ -49,7 +49,7 @@ namespace Photon.Pun.DeepUnder
         void Update()
         {
 
-            if (!gameManager.CheckGamePaused() && PhotonNetwork.IsMasterClient){
+            if (!gameManager.CheckGamePaused() && PhotonNetwork.IsMasterClient && !gameManager.CheckGameEnded()){
 
                 
                 horizontal = Input.GetAxis("Horizontal");
@@ -65,6 +65,7 @@ namespace Photon.Pun.DeepUnder
                     {
                         pickingClue = false;
                         playerAudioSource.Stop();
+                        ui.transform.Find("DownPanel").Find("ClueText").GetComponent<UnityEngine.UI.Text>().text = "";
                         gameManager.AddProofFound();
                         ui.transform.Find("TopRightPanel").Find("Clues").GetComponent<UnityEngine.UI.Text>().text = "Clues : "+ gameManager.GetNumberOfProofsFound() + " / " + gameManager.GetGameCluesNb();
                         gameManager.photonView.RPC("ChangeObjectTag", RpcTarget.All, EvidenceInFront.GetComponent<PhotonView>().ViewID, "Untagged");
@@ -87,16 +88,6 @@ namespace Photon.Pun.DeepUnder
                     ui.transform.Find("loading").gameObject.SetActive(false);
                     ui.transform.Find("loading").GetComponent<UnityEngine.UI.Slider>().value = 0;
                 }
-                ui.transform.Find("TopRightPanel").Find("LightEnergy").GetComponent<UnityEngine.UI.Slider>().value -= 0.35f/gameTimeMultiplier;
-                foreach (GameObject light in GameObject.FindGameObjectsWithTag("Light"))
-                {
-                    light.GetComponent<Light>().range = 15 + ui.transform.Find("TopRightPanel").Find("LightEnergy").GetComponent<UnityEngine.UI.Slider>().value * 0.35f;
-                }
-                if (ui.transform.Find("TopRightPanel").Find("LightEnergy").GetComponent<UnityEngine.UI.Slider>().value == 0)
-                {
-                    ApplicationModel.ending = 0;
-                    gameManager.photonView.RPC("EndGame",RpcTarget.All,false);
-                }
 
                 if (musicFadeOutEnabled)
                 {
@@ -118,13 +109,16 @@ namespace Photon.Pun.DeepUnder
             }
         }
 
+
         private void FixedUpdate()
         {
             Vector3 normalizedDirection = new Vector3(horizontal, 0, vertical).normalized;
             body.velocity = normalizedDirection * speed;
             if (gameManager.CheckGameEnded()){
-                if (!animator.GetBool("Death"))
+                if (!animator.GetBool("Death")){
                     animator.SetBool("Death",true);
+                    GetComponent<Animation>().Play();
+                }
             } else 
             {
                 int animationState;
@@ -151,16 +145,25 @@ namespace Photon.Pun.DeepUnder
 
         private void OnTriggerEnter(Collider other)
         {
-            if (other.tag == "door")
-            {
-                atTheDoor = true;
-                if (gameManager.GetNumberOfProofsFound() > 2)
+            if (!gameManager.CheckGameEnded()){
+                if (other.tag == "door")
                 {
-                    ui.transform.Find("DownPanel").Find("ClueText").GetComponent<UnityEngine.UI.Text>().text = "press space to exit";
+                    atTheDoor = true;
+                    if (gameManager.GetNumberOfProofsFound() >2)
+                    {
+                        ui.transform.Find("DownPanel").Find("ClueText").GetComponent<UnityEngine.UI.Text>().text = "press space to exit";
+                    }
+                    else
+                    {
+                        ui.transform.Find("DownPanel").Find("ClueText").GetComponent<UnityEngine.UI.Text>().text = "not enough evidences to exit";
+                    }
+                    ui.transform.Find("DownPanel").Find("ClueText").gameObject.SetActive(true);
                 }
-                else
+                else if (other.tag == "Clue")
                 {
-                    ui.transform.Find("DownPanel").Find("ClueText").GetComponent<UnityEngine.UI.Text>().text = "not enough evidences to exit";
+                    EvidenceInFront = other.gameObject;
+                    ui.transform.Find("DownPanel").Find("ClueText").GetComponent<UnityEngine.UI.Text>().text = "press space to search for evidence";
+                    ui.transform.Find("DownPanel").Find("ClueText").gameObject.SetActive(true);
                 }
                 ui.transform.Find("DownPanel").Find("ClueText").gameObject.SetActive(true);
             }
@@ -180,13 +183,16 @@ namespace Photon.Pun.DeepUnder
             {
                 if (!monsterSound.isPlaying)
                 {
-                    musicFadeOutEnabled = false;
-                    monsterSound.volume = 1;
-                    monsterSound.Play();
-                    monsterSound.loop = true;
+                    if (!monsterSound.isPlaying)
+                    {
+                        musicFadeOutEnabled = false;
+                        monsterSound.volume = 1;
+                        monsterSound.Play();
+                        monsterSound.loop = true;
+                    }
                 }
-
             }
+            
         }
         private void OnTriggerExit(Collider other)
         {

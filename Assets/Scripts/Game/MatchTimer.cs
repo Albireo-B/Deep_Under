@@ -27,7 +27,6 @@ namespace Photon.Pun.DeepUnder{
                     timerStarted = true;
                 }
             }
-             
 
         public void SetTimerStarted(bool newVal)
         {

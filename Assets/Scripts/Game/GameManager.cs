@@ -33,6 +33,9 @@ namespace Photon.Pun.DeepUnder
         [Header("Game End")]
         [SerializeField] private GameObject endGameCanvas;
         private bool gameEnded;
+        
+        [Header("Menu")]
+        [SerializeField] private GameObject menuCanvas;
 
         private void Awake() {
             if (Instance == null) { Instance = this; } 
@@ -63,8 +66,29 @@ namespace Photon.Pun.DeepUnder
 
         private void Update() {
             
-
+            if (Input.GetKeyDown(KeyCode.Escape))
+            {
+                if (menuCanvas.activeSelf)
+                    menuCanvas.SetActive(false);
+                else
+                    menuCanvas.SetActive(true);
+            }
         }
+
+        #region 
+
+        public void LeaveGame()
+        {
+            PhotonNetwork.LeaveRoom();
+            //SceneManager.LoadScene("Lobby");
+        }
+
+        public void Back()
+        {
+            menuCanvas.SetActive(false);
+        }
+
+        #endregion
 
         #region Clues
         public int GetGameCluesNb()
@@ -106,14 +130,17 @@ namespace Photon.Pun.DeepUnder
                         randomChild = possibleClues.transform.GetChild(randomChildIdx);
                     } while (clues.FindIndex(d => d == randomChild.gameObject) != -1);
                     Vector3 collidSize = randomChild.GetComponent<BoxCollider>().size;
-                    photonView.RPC("ChangeObjectTagAndAddClue", RpcTarget.All, randomChild.gameObject.GetComponent<PhotonView>().ViewID, "Clue");
+                    photonView.RPC("ChangeObjectTag", RpcTarget.All, randomChild.gameObject.GetComponent<PhotonView>().ViewID, "Clue");
                 }
         }
 
         [PunRPC]
-        public void ChangeObjectTagAndAddClue(int gameObjectID, string newTag)
+        public void ChangeObjectTag(int gameObjectID, string newTag)
         {
-            AddClues(PhotonNetwork.GetPhotonView(gameObjectID).gameObject);
+            if (!PhotonNetwork.IsMasterClient && newTag == "Untagged")
+            {
+                AddClues(PhotonNetwork.GetPhotonView(gameObjectID).gameObject);
+            }
             PhotonNetwork.GetPhotonView(gameObjectID).gameObject.tag = newTag;
             if (newTag == "Clue")
             {

@@ -118,6 +118,7 @@ namespace Photon.Pun.DeepUnder
             }
         }
 
+
         private void FixedUpdate()
         {
             Vector3 normalizedDirection = new Vector3(horizontal, 0, vertical).normalized;
@@ -145,7 +146,6 @@ namespace Photon.Pun.DeepUnder
                 }
                 if (animator.GetInteger("AnimationState")!=animationState){
                     animator.SetInteger("AnimationState",animationState);
-                    //animator.ine
                 }
 
             }
@@ -154,36 +154,38 @@ namespace Photon.Pun.DeepUnder
 
         private void OnTriggerEnter(Collider other)
         {
-            if (other.tag == "door")
-            {
-                atTheDoor = true;
-                if (gameManager.GetNumberOfProofsFound() >2)
+            if (!gameManager.CheckGameEnded()){
+                if (other.tag == "door")
                 {
-                    ui.transform.Find("DownPanel").Find("ClueText").GetComponent<UnityEngine.UI.Text>().text = "press space to exit";
+                    atTheDoor = true;
+                    if (gameManager.GetNumberOfProofsFound() >2)
+                    {
+                        ui.transform.Find("DownPanel").Find("ClueText").GetComponent<UnityEngine.UI.Text>().text = "press space to exit";
+                    }
+                    else
+                    {
+                        ui.transform.Find("DownPanel").Find("ClueText").GetComponent<UnityEngine.UI.Text>().text = "not enough evidences to exit";
+                    }
+                    ui.transform.Find("DownPanel").Find("ClueText").gameObject.SetActive(true);
                 }
-                else
+                else if (other.tag == "Clue")
                 {
-                    ui.transform.Find("DownPanel").Find("ClueText").GetComponent<UnityEngine.UI.Text>().text = "not enough evidences to exit";
+                    EvidenceInFront = other.gameObject;
+                    ui.transform.Find("DownPanel").Find("ClueText").GetComponent<UnityEngine.UI.Text>().text = "press space to search for evidence";
+                    ui.transform.Find("DownPanel").Find("ClueText").gameObject.SetActive(true);
                 }
-                ui.transform.Find("DownPanel").Find("ClueText").gameObject.SetActive(true);
-            }
-            else if (other.tag == "Clue")
-            {
-                EvidenceInFront = other.gameObject;
-                ui.transform.Find("DownPanel").Find("ClueText").GetComponent<UnityEngine.UI.Text>().text = "press space to search for evidence";
-                ui.transform.Find("DownPanel").Find("ClueText").gameObject.SetActive(true);
-            }
-            else if (other.tag == "Monster")
-            {
-                if (!monsterSound.isPlaying)
+                else if (other.tag == "Monster")
                 {
-                    musicFadeOutEnabled = false;
-                    monsterSound.volume = 1;
-                    monsterSound.Play();
-                    monsterSound.loop = true;
+                    if (!monsterSound.isPlaying)
+                    {
+                        musicFadeOutEnabled = false;
+                        monsterSound.volume = 1;
+                        monsterSound.Play();
+                        monsterSound.loop = true;
+                    }
                 }
-
             }
+            
         }
         private void OnTriggerExit(Collider other)
         {

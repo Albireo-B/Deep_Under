@@ -18,15 +18,7 @@ namespace Photon.Pun.DeepUnder
         // Start is called before the first frame update
         void Start()
         {
-            /*if (ApplicationModel.ending == 1)
-            {
-                endGameCanvas.transform.Find("Text").GetComponent<Text>().text = "You win !";
 
-            }
-            else
-            {
-                endGameCanvas.transform.Find("Text").GetComponent<Text>().text = "You loose !";
-            }*/
         }
 
         // Update is called once per frame

@@ -32,6 +32,7 @@ namespace Photon.Pun.DeepUnder
 
         [Header("Game End")]
         [SerializeField] private GameObject endGameCanvas;
+        [SerializeField] private GameObject deathScreen;
         private bool gameEnded;
         
         [Header("Menu")]
@@ -75,7 +76,7 @@ namespace Photon.Pun.DeepUnder
             }
         }
 
-        #region 
+        #region Menu
 
         public void LeaveGame()
         {
@@ -172,6 +173,10 @@ namespace Photon.Pun.DeepUnder
                 runnerView.transform.Find("Player").gameObject.GetComponent<Rigidbody>().constraints = RigidbodyConstraints.FreezeAll;
                 //To avoid the monster collider to push the player or force itself into walls
                 Destroy(runnerView.transform.Find("Monster").gameObject);
+                runnerView.transform.Find("HUD").gameObject.SetActive(false);
+                runnerView.GetComponent<BackgroundVoiceScript>().enabled = false;
+                //monster voices.
+                deathScreen.GetComponent<Animation>().Play();
             } else {
                 Destroy(runnerView.transform.Find("Monster").gameObject);
                 Destroy(runnerView.transform.Find("Player").gameObject);

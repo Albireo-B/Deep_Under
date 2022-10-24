@@ -5,6 +5,7 @@ using UnityEngine;
 using Photon.Realtime;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
+using System.Collections;
 
 namespace Photon.Pun.DeepUnder
 {
@@ -175,8 +176,7 @@ namespace Photon.Pun.DeepUnder
                 Destroy(runnerView.transform.Find("Monster").gameObject);
                 runnerView.transform.Find("HUD").gameObject.SetActive(false);
                 runnerView.GetComponent<BackgroundVoiceScript>().enabled = false;
-                //monster voices.
-                deathScreen.GetComponent<Animation>().Play();
+                StartCoroutine(DelayedDeathScreenAnimation());
             } else {
                 Destroy(runnerView.transform.Find("Monster").gameObject);
                 Destroy(runnerView.transform.Find("Player").gameObject);
@@ -188,6 +188,13 @@ namespace Photon.Pun.DeepUnder
                 }
             }
             GetComponent<EndGameScript>().DisplayInfos(gameTime);
+        }
+
+        // The delay coroutine
+        IEnumerator DelayedDeathScreenAnimation ()
+        {
+            yield return new WaitForSeconds(2.5f);
+            deathScreen.GetComponent<Animation>().Play();
         }
 
         public void SetGameWon(bool newVal)

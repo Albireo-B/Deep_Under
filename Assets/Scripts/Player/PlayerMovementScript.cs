@@ -88,16 +88,6 @@ namespace Photon.Pun.DeepUnder
                     ui.transform.Find("loading").gameObject.SetActive(false);
                     ui.transform.Find("loading").GetComponent<UnityEngine.UI.Slider>().value = 0;
                 }
-                ui.transform.Find("TopRightPanel").Find("LightEnergy").GetComponent<UnityEngine.UI.Slider>().value -= 0.35f/gameTimeMultiplier;
-                foreach (GameObject light in GameObject.FindGameObjectsWithTag("Light"))
-                {
-                    light.GetComponent<Light>().range = 15 + ui.transform.Find("TopRightPanel").Find("LightEnergy").GetComponent<UnityEngine.UI.Slider>().value * 0.35f;
-                }
-                if (ui.transform.Find("TopRightPanel").Find("LightEnergy").GetComponent<UnityEngine.UI.Slider>().value == 0)
-                {
-                    ApplicationModel.ending = 0;
-                    gameManager.photonView.RPC("EndGame",RpcTarget.All,false);
-                }
 
                 if (musicFadeOutEnabled)
                 {

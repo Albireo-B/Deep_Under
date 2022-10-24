@@ -41,9 +41,40 @@ public class LinkGenerator : MonoBehaviour
             roomstolink[i][1].GetComponent<DoorScript>().linkdoor(roomstolink[i+1][0]);
             roomstolink[i + 1][0].GetComponent<DoorScript>().linkdoor(roomstolink[i][1]);
         }
-        
+
+        //remove already filled rooms
+        int roomnb = 0;
+        while (roomnb< roomstolink.Count)
+        {
+            int nbdoorlinked = 0;
+            foreach (GameObject door in roomstolink[roomnb])
+            {
+                if (door.GetComponent<DoorScript>().linkedDoor != null)
+                {
+                    nbdoorlinked++;
+                }
+            }
+            //go to next room if this room is not filled
+            if (nbdoorlinked != roomstolink[roomnb].Count)
+            {
+                roomnb++;
+            }
+            //remove this index, the next room will then be at the same index
+            else
+            {
+                roomstolink.RemoveAt(roomnb);
+            }
+        }
+        foreach (List<GameObject> room in roomstolink)
+        {
+            
+        }
+
+
         while (roomstolink.Count > 1)
         {
+            
+            
             shufflerooms();
             //fill the rest of the room door link one by one
             bool linkdone = false;

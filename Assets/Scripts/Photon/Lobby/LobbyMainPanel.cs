@@ -207,6 +207,28 @@ namespace Photon.Pun.DeepUnder
 
         #region UI CALLBACKS
 
+
+        public void OnQuitClicked()
+        {
+            Application.Quit();
+        }
+
+        public void OnHowToPlayClicked()
+        {
+            //TODO
+        }
+
+        public void OnCreditsClicked()
+        {
+            //TODO
+        }
+
+        public void OnPlayClicked()
+        {
+            transform.Find("MenuPanel").gameObject.SetActive(false);
+            transform.Find("LoginPanel").gameObject.SetActive(true);
+        }
+        
         public void OnBackButtonClicked()
         {
             if (PhotonNetwork.InLobby)

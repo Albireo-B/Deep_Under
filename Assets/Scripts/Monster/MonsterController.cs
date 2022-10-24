@@ -24,16 +24,17 @@ namespace Photon.Pun.DeepUnder
             if (!GameManager.Instance.CheckGamePaused() && PhotonNetwork.IsMasterClient && Player != null){
                 navMesh.SetDestination(Player.transform.position);
             }
-        }/*
+        }
         private void OnTriggerEnter(Collider other)
         {
-            //if watch monster touch is a door and the door is on him, he tp
-            if (other.tag == "linkedDoor" && Vector3.Distance(other.transform.position, transform.position)<1)
+            //if what monster touch is a door and the door is on him, he tp
+            Debug.Log(Vector3.Distance(other.transform.position, transform.position));
+            if (other.tag == "linkedDoor" && Vector3.Distance(other.transform.position, transform.position)<15)
             {
-                transform.position = other.GetComponent<DoorScript>()
+                navMesh.Warp(other.GetComponent<DoorScript>()
                     .linkedDoor.GetComponent<DoorScript>()
-                    .enterwaypoint.position;
+                    .enterwaypoint.position);
             }
-        }*/
+        }
     }
 }

@@ -21,24 +21,31 @@ namespace Photon.Pun.DeepUnder
         GameObject movingBody;
         GameObject EvidenceInFront = null;
         bool atTheDoor = false;
-        AudioSource monsterSound;
+        AudioClip hearthSound;
         private bool musicFadeOutEnabled = false;
         AudioClip deathScream;
         AudioSource playerAudioSource;
+        AudioSource cluesAudioSource;
         private bool pickingClue;
         private GameManager gameManager;
+        private float currentHeartSpeed;
 
         // Start is called before the first frame update
         void Start()
         {
+            currentHeartSpeed = 1;
             pickingClue = false;
             gameManager = GameManager.Instance;
-            playerAudioSource = GetComponent<AudioSource>();
+            cluesAudioSource = transform.parent.gameObject.GetComponent<BackgroundVoiceScript>().audioSourceClues;
+            playerAudioSource = transform.parent.gameObject.GetComponent<BackgroundVoiceScript>().audioSourceHeart;
             deathScream = Resources.Load<AudioClip>("DeathSound");
-            monsterSound = transform.Find("monsterSound").GetComponent<AudioSource>();
+            hearthSound = Resources.Load<AudioClip>("HeartBeat");
             movingBody = transform.Find("DeepUnderCharacter").gameObject;
             animator = transform.Find("DeepUnderCharacter").GetComponent<Animator>();
             body = GetComponent<Rigidbody>();
+            playerAudioSource.clip = hearthSound;
+            playerAudioSource.loop = true;
+            playerAudioSource.Play();
 
             
         }
@@ -62,7 +69,7 @@ namespace Photon.Pun.DeepUnder
                     if (ui.transform.Find("loading").GetComponent<UnityEngine.UI.Slider>().value >= 100)
                     {
                         pickingClue = false;
-                        playerAudioSource.Stop();
+                        cluesAudioSource.Stop();
                         ui.transform.Find("DownPanel").Find("ClueText").GetComponent<UnityEngine.UI.Text>().text = "";
                         gameManager.AddProofFound();
                         ui.transform.Find("TopRightPanel").Find("Clues").GetComponent<UnityEngine.UI.Text>().text = "Clues : "+ gameManager.GetNumberOfProofsFound() + " / " + gameManager.GetGameCluesNb();
@@ -75,35 +82,18 @@ namespace Photon.Pun.DeepUnder
                         pickingClue = true;
                         ui.transform.Find("loading").gameObject.SetActive(true);
                         ui.transform.Find("loading").GetComponent<UnityEngine.UI.Slider>().value += 0.3f;
-                        if (!playerAudioSource.isPlaying)
-                            playerAudioSource.Play();
+                        if (!cluesAudioSource.isPlaying)
+                            cluesAudioSource.Play();
                     }
 
                 }
                 else
                 {
-                    playerAudioSource.Stop();
+                    cluesAudioSource.Stop();
                     ui.transform.Find("loading").gameObject.SetActive(false);
                     ui.transform.Find("loading").GetComponent<UnityEngine.UI.Slider>().value = 0;
                 }
-                /* //RELATED TO MONSTER SOUND
-                if (musicFadeOutEnabled)
-                {
-                    if (monsterSound.volume <= 0.1f)
-                    {
-                        monsterSound.Stop();
-                        musicFadeOutEnabled = false;
-                    }
-                    else
-                    {
-                        float newVolume = monsterSound.volume - (0.1f * Time.deltaTime);  //change 0.1f to something else to adjust the rate of the volume dropping
-                        if (newVolume < 0f)
-                        {
-                            newVolume = 0f;
-                        }
-                        monsterSound.volume = newVolume;
-                    }
-                }*/
+
             }
         }
 
@@ -119,10 +109,33 @@ namespace Photon.Pun.DeepUnder
                         animator.SetBool("Death",true);
                         playerAudioSource.clip = deathScream;
                         playerAudioSource.Play();
+                        playerAudioSource.loop = false;
+                        playerAudioSource.pitch = 1;
                         GetComponent<Animation>().Play();
                     }
                 } else 
                 {
+                    float newSpeed;
+                    if (currentHeartSpeed == 1)
+                    {
+                        newSpeed = 1;
+                    } else {
+                        newSpeed =  1 + currentHeartSpeed/2;
+                    }
+                    if (playerAudioSource.pitch != newSpeed){
+                        playerAudioSource.pitch = newSpeed;
+                        playerAudioSource.outputAudioMixerGroup.audioMixer.SetFloat("Pitch", 1f / newSpeed);
+                    }
+                    if (!playerAudioSource.isPlaying){
+                        playerAudioSource.Play();
+                        
+                        Debug.Log("dfsdf");
+                    }
+                        //change countdowncanvas trarget display
+
+
+
+                    //ANIMATIONS REGION
                     int animationState;
                     if (body.velocity != Vector3.zero)
                     {
@@ -222,6 +235,15 @@ namespace Photon.Pun.DeepUnder
                     ApplicationModel.ending = 0;
                     gameManager.photonView.RPC("EndGame",RpcTarget.All,false);
                 }
+            }
+        }
+
+
+        public void SetHeartSpeed(int newSpeed)
+        {
+            if (currentHeartSpeed != newSpeed)
+            {
+                currentHeartSpeed = newSpeed;
             }
         }
     }

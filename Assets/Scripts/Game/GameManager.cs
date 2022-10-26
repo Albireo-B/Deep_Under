@@ -225,8 +225,10 @@ namespace Photon.Pun.DeepUnder
         {
             countdownCanvas.SetActive(false);
             ResumeGame();
-            if (PhotonNetwork.IsMasterClient)
+            if (PhotonNetwork.IsMasterClient){
                 SpawnClues();
+                runnerView.transform.Find("Player").gameObject.GetComponent<AudioSource>().Play();
+            }
         }
 
         private bool CheckAllPlayerLoadedLevel()

@@ -34,7 +34,7 @@ namespace Photon.Pun.DeepUnder
             pickingClue = false;
             gameManager = GameManager.Instance;
             playerAudioSource = GetComponent<AudioSource>();
-            deathScream = Resources.Load<AudioClip>("DeathScream");
+            deathScream = Resources.Load<AudioClip>("DeathSound");
             monsterSound = transform.Find("monsterSound").GetComponent<AudioSource>();
             movingBody = transform.Find("DeepUnderCharacter").gameObject;
             animator = transform.Find("DeepUnderCharacter").GetComponent<Animator>();
@@ -117,6 +117,8 @@ namespace Photon.Pun.DeepUnder
                 if (gameManager.CheckGameEnded()){
                     if (!animator.GetBool("Death")){
                         animator.SetBool("Death",true);
+                        playerAudioSource.clip = deathScream;
+                        playerAudioSource.Play();
                         GetComponent<Animation>().Play();
                     }
                 } else 

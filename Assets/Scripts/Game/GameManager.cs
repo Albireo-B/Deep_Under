@@ -56,11 +56,11 @@ namespace Photon.Pun.DeepUnder
             
             if (!PhotonNetwork.IsMasterClient)
             {
-
-                observerView.SetActive(false);
+                runnerView.transform.Find("HUD").gameObject.SetActive(false);
+                
 
             } else {
-                runnerView.transform.Find("HUD").gameObject.SetActive(false);
+                observerView.SetActive(false);
                 nbProofFound = 0;
             }
             gamePaused = true;

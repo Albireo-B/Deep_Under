@@ -57,11 +57,11 @@ namespace Photon.Pun.DeepUnder
             if (!PhotonNetwork.IsMasterClient)
             {
                 runnerView.transform.Find("HUD").gameObject.SetActive(false);
+                
 
             } else {
-                
-                nbProofFound = 0;
                 observerView.SetActive(false);
+                nbProofFound = 0;
             }
             gamePaused = true;
         }
@@ -195,6 +195,7 @@ namespace Photon.Pun.DeepUnder
         IEnumerator DelayedDeathScreenAnimation ()
         {
             yield return new WaitForSeconds(2.5f);
+            deathScreen.active = true;
             deathScreen.GetComponent<Animation>().Play();
         }
 

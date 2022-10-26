@@ -169,13 +169,14 @@ namespace Photon.Pun.DeepUnder
             GetComponent<MatchTimer>().SetTimerStarted(false);
             SetGameWon(newValGameWon);
             double gameTime = GetComponent<MatchTimer>().GetGameTime();
+            
+            runnerView.GetComponent<BackgroundVoiceScript>().enabled = false;
             if (PhotonNetwork.IsMasterClient)
             {
                 runnerView.transform.Find("Player").gameObject.GetComponent<Rigidbody>().constraints = RigidbodyConstraints.FreezeAll;
                 //To avoid the monster collider to push the player or force itself into walls
                 Destroy(runnerView.transform.Find("Monster").gameObject);
                 runnerView.transform.Find("HUD").gameObject.SetActive(false);
-                runnerView.GetComponent<BackgroundVoiceScript>().enabled = false;
                 StartCoroutine(DelayedDeathScreenAnimation());
             } else {
                 Destroy(runnerView.transform.Find("Monster").gameObject);

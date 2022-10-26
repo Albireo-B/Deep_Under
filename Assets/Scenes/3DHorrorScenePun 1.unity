@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.12731749, g: 0.13414757, b: 0.1210787, a: 1}
+  m_IndirectSpecularColor: {r: 0.12731713, g: 0.13414736, b: 0.12107852, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -3591,7 +3591,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 1472855258, guid: 2beef53f53ee2cf498cf6230da5548b6, type: 3}
       propertyPath: sceneViewId
-      value: 8
+      value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 2997904027522772376, guid: 2beef53f53ee2cf498cf6230da5548b6, type: 3}
       propertyPath: m_Name
@@ -3601,25 +3601,9 @@ PrefabInstance:
       propertyPath: ui
       value: 
       objectReference: {fileID: 681065681}
-    - target: {fileID: 2997904027522772378, guid: 2beef53f53ee2cf498cf6230da5548b6, type: 3}
-      propertyPath: camera2
-      value: 
-      objectReference: {fileID: 0}
     - target: {fileID: 2997904027522772379, guid: 2beef53f53ee2cf498cf6230da5548b6, type: 3}
       propertyPath: m_RootOrder
       value: 12
-      objectReference: {fileID: 0}
-    - target: {fileID: 2997904027522772379, guid: 2beef53f53ee2cf498cf6230da5548b6, type: 3}
-      propertyPath: m_LocalScale.x
-      value: 2
-      objectReference: {fileID: 0}
-    - target: {fileID: 2997904027522772379, guid: 2beef53f53ee2cf498cf6230da5548b6, type: 3}
-      propertyPath: m_LocalScale.y
-      value: 2
-      objectReference: {fileID: 0}
-    - target: {fileID: 2997904027522772379, guid: 2beef53f53ee2cf498cf6230da5548b6, type: 3}
-      propertyPath: m_LocalScale.z
-      value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 2997904027522772379, guid: 2beef53f53ee2cf498cf6230da5548b6, type: 3}
       propertyPath: m_LocalPosition.x
@@ -3660,18 +3644,6 @@ PrefabInstance:
     - target: {fileID: 2997904027522772379, guid: 2beef53f53ee2cf498cf6230da5548b6, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 2997904027522772379, guid: 2beef53f53ee2cf498cf6230da5548b6, type: 3}
-      propertyPath: m_ConstrainProportionsScale
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 2997904027623608104, guid: 2beef53f53ee2cf498cf6230da5548b6, type: 3}
-      propertyPath: m_CullingMask.m_Bits
-      value: 1815
-      objectReference: {fileID: 0}
-    - target: {fileID: 6684114337386352423, guid: 2beef53f53ee2cf498cf6230da5548b6, type: 3}
-      propertyPath: m_Camera
-      value: 
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 2beef53f53ee2cf498cf6230da5548b6, type: 3}

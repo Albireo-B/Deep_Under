@@ -16,8 +16,6 @@ namespace Photon.Pun.DeepUnder
         Rigidbody body;
         public Canvas ui;
         public float speed = 5.0f;
-
-        public Canvas camera2;
         public float gameTimeMultiplier = 1;
         Animator animator;
         GameObject movingBody;
@@ -112,73 +110,80 @@ namespace Photon.Pun.DeepUnder
 
         private void FixedUpdate()
         {
-            Vector3 normalizedDirection = new Vector3(horizontal, 0, vertical).normalized;
-            body.velocity = normalizedDirection * speed;
-            if (gameManager.CheckGameEnded()){
-                if (!animator.GetBool("Death")){
-                    animator.SetBool("Death",true);
-                    GetComponent<Animation>().Play();
-                }
-            } else 
+            if (PhotonNetwork.IsMasterClient)
             {
-                int animationState;
-                if (body.velocity != Vector3.zero)
+                Vector3 normalizedDirection = new Vector3(horizontal, 0, vertical).normalized;
+                body.velocity = normalizedDirection * speed;
+                if (gameManager.CheckGameEnded()){
+                    if (!animator.GetBool("Death")){
+                        animator.SetBool("Death",true);
+                        GetComponent<Animation>().Play();
+                    }
+                } else 
                 {
-                    animationState = 1;
-                    movingBody.transform.rotation = Quaternion.LookRotation(body.velocity, Vector3.up);
-                }
-                else if (pickingClue)
-                {
-                    animationState = 2;
-                }
-                else
-                {
-                    animationState = 0;
-                }
-                if (animator.GetInteger("AnimationState")!=animationState){
-                    animator.SetInteger("AnimationState",animationState);
+                    int animationState;
+                    if (body.velocity != Vector3.zero)
+                    {
+                        animationState = 1;
+                        movingBody.transform.rotation = Quaternion.LookRotation(body.velocity, Vector3.up);
+                    }
+                    else if (pickingClue)
+                    {
+                        animationState = 2;
+                    }
+                    else
+                    {
+                        animationState = 0;
+                    }
+                    if (animator.GetInteger("AnimationState")!=animationState){
+                        animator.SetInteger("AnimationState",animationState);
+                    }
+
                 }
 
             }
-
+            
         }
 
         private void OnTriggerEnter(Collider other)
         {
-            if (!gameManager.CheckGameEnded()){
-                if (other.tag == "door")
-                {
-                    atTheDoor = true;
-                    if (gameManager.GetNumberOfProofsFound() == gameManager.GetGameCluesNb())
+            if (PhotonNetwork.IsMasterClient)
+            {
+                if (!gameManager.CheckGameEnded()){
+                    if (other.tag == "door")
                     {
-                        ui.transform.Find("DownPanel").Find("ClueText").GetComponent<UnityEngine.UI.Text>().text = "press space to exit";
+                        atTheDoor = true;
+                        if (gameManager.GetNumberOfProofsFound() == gameManager.GetGameCluesNb())
+                        {
+                            ui.transform.Find("DownPanel").Find("ClueText").GetComponent<UnityEngine.UI.Text>().text = "press space to exit";
+                        }
+                        else
+                        {
+                            ui.transform.Find("DownPanel").Find("ClueText").GetComponent<UnityEngine.UI.Text>().text = "not enough evidences to exit";
+                        }
+                        ui.transform.Find("DownPanel").Find("ClueText").gameObject.SetActive(true);
                     }
-                    else
+                    else if (other.tag == "Clue")
                     {
-                        ui.transform.Find("DownPanel").Find("ClueText").GetComponent<UnityEngine.UI.Text>().text = "not enough evidences to exit";
+                        EvidenceInFront = other.gameObject;
+                        ui.transform.Find("DownPanel").Find("ClueText").GetComponent<UnityEngine.UI.Text>().text = "press space to search for evidence";
+                        ui.transform.Find("DownPanel").Find("ClueText").gameObject.SetActive(true);
                     }
-                    ui.transform.Find("DownPanel").Find("ClueText").gameObject.SetActive(true);
-                }
-                else if (other.tag == "Clue")
-                {
-                    EvidenceInFront = other.gameObject;
-                    ui.transform.Find("DownPanel").Find("ClueText").GetComponent<UnityEngine.UI.Text>().text = "press space to search for evidence";
-                    ui.transform.Find("DownPanel").Find("ClueText").gameObject.SetActive(true);
-                }
-                else if (other.tag == "linkedDoor")
-                {
-                    transform.position = other.GetComponent<DoorScript>()
-                        .linkedDoor.GetComponent<DoorScript>()
-                        .enterwaypoint.position;
-                }
-                else if (other.tag == "Monster")
-                {
-                    if (!monsterSound.isPlaying)
+                    else if (other.tag == "linkedDoor")
                     {
-                        musicFadeOutEnabled = false;
-                        monsterSound.volume = 1;
-                        monsterSound.Play();
-                        monsterSound.loop = true;
+                        transform.position = other.GetComponent<DoorScript>()
+                            .linkedDoor.GetComponent<DoorScript>()
+                            .enterwaypoint.position;
+                    }
+                    else if (other.tag == "Monster")
+                    {
+                        if (!monsterSound.isPlaying)
+                        {
+                            musicFadeOutEnabled = false;
+                            monsterSound.volume = 1;
+                            monsterSound.Play();
+                            monsterSound.loop = true;
+                        }
                     }
                 }
             }
@@ -186,16 +191,19 @@ namespace Photon.Pun.DeepUnder
         }
         private void OnTriggerExit(Collider other)
         {
-            if (other.tag == "Monster")
+            if (PhotonNetwork.IsMasterClient)
             {
-                musicFadeOutEnabled = true;
-            }
-            else
-            {
-                pickingClue = false;
-                ui.transform.Find("DownPanel").Find("ClueText").gameObject.SetActive(false);
-                EvidenceInFront = null;
-                atTheDoor = false;
+                if (other.tag == "Monster")
+                {
+                    musicFadeOutEnabled = true;
+                }
+                else
+                {
+                    pickingClue = false;
+                    ui.transform.Find("DownPanel").Find("ClueText").gameObject.SetActive(false);
+                    EvidenceInFront = null;
+                    atTheDoor = false;
+                }
             }
             
 
@@ -203,10 +211,13 @@ namespace Photon.Pun.DeepUnder
 
         private void OnCollisionEnter(Collision collision)
         {
-            if (collision.collider.tag == "Monster")
+            if (PhotonNetwork.IsMasterClient)
             {
-                ApplicationModel.ending = 0;
-                gameManager.photonView.RPC("EndGame",RpcTarget.All,false);
+                if (collision.collider.tag == "Monster")
+                {
+                    ApplicationModel.ending = 0;
+                    gameManager.photonView.RPC("EndGame",RpcTarget.All,false);
+                }
             }
         }
     }

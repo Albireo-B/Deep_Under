@@ -86,7 +86,7 @@ namespace Photon.Pun.DeepUnder
                     ui.transform.Find("loading").gameObject.SetActive(false);
                     ui.transform.Find("loading").GetComponent<UnityEngine.UI.Slider>().value = 0;
                 }
-
+                /* //RELATED TO MONSTER SOUND
                 if (musicFadeOutEnabled)
                 {
                     if (monsterSound.volume <= 0.1f)
@@ -103,7 +103,7 @@ namespace Photon.Pun.DeepUnder
                         }
                         monsterSound.volume = newVolume;
                     }
-                }
+                }*/
             }
         }
 
@@ -177,6 +177,8 @@ namespace Photon.Pun.DeepUnder
                             .linkedDoor.GetComponent<DoorScript>()
                             .enterwaypoint.position;
                     }
+
+                    /* //RELATED TO MONSTER SOUND
                     else if (other.tag == "Monster")
                     {
                         if (!monsterSound.isPlaying)
@@ -186,7 +188,7 @@ namespace Photon.Pun.DeepUnder
                             monsterSound.Play();
                             monsterSound.loop = true;
                         }
-                    }
+                    }*/
                 }
             }
             

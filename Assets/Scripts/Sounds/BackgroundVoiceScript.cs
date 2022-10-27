@@ -6,7 +6,9 @@ using UnityEngine.UI;
 public class BackgroundVoiceScript : MonoBehaviour
 {
 
-    AudioSource audioSource;
+    AudioSource audioSourceRussian;
+    public AudioSource audioSourceHeart;
+    public AudioSource audioSourceClues;
     AudioClip audio1;
     AudioClip audio2;
     AudioClip audio3;
@@ -17,24 +19,31 @@ public class BackgroundVoiceScript : MonoBehaviour
 
     private float time = 0.0f;
 
+    private void Awake() {
+        AudioSource[] sounds = GetComponents<AudioSource>();
+        audioSourceRussian = sounds[0];
+        audioSourceHeart = sounds[1];
+        audioSourceClues = sounds[2];
+    }
     // Start is called before the first frame update
     void Start()
     {
-
+        
         audio1 = Resources.Load<AudioClip>("Batiment");
         audio2 = Resources.Load<AudioClip>("derriere");
         audio3 = Resources.Load<AudioClip>("documents");
         audio4 = Resources.Load<AudioClip>("somethingelse");
         audio5 = Resources.Load<AudioClip>("stop");
-        audioSource = GetComponent<AudioSource>();
+        audioSourceRussian = GetComponent<AudioSource>();
         FillAudioList();
         txt.gameObject.SetActive(false);
-
     }
 
     // Update is called once per frame
     void Update()
     {
+
+        
         if (time >= 15)
         {
             time = 0.0f;
@@ -48,8 +57,8 @@ public class BackgroundVoiceScript : MonoBehaviour
 
     void PlayNextClip()
     {
-        audioSource.clip = listVoicesSubtitles[listVoicesSubtitles.Count - 1].Value;
-        audioSource.Play();
+        audioSourceRussian.clip = listVoicesSubtitles[listVoicesSubtitles.Count - 1].Value;
+        audioSourceRussian.Play();
         txt.text = listVoicesSubtitles[listVoicesSubtitles.Count - 1].Key;
         txt.gameObject.SetActive(true);
         StartCoroutine(EraseText());

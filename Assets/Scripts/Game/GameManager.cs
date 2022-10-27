@@ -15,6 +15,9 @@ namespace Photon.Pun.DeepUnder
         [SerializeField] private GameObject runnerView;
         [SerializeField] private GameObject observerView;
 
+        [SerializeField] public GameObject runnerposteffects;
+        [SerializeField] public GameObject observerposteffects;
+
         private bool gamePaused = false;
         
         [Header("InfoText")]
@@ -57,10 +60,14 @@ namespace Photon.Pun.DeepUnder
             if (!PhotonNetwork.IsMasterClient)
             {
                 runnerView.transform.Find("HUD").gameObject.SetActive(false);
-                
+                observerposteffects.active = true;
+
+
 
             } else {
                 observerView.SetActive(false);
+                runnerposteffects.active = true;
+                
                 nbProofFound = 0;
             }
             gamePaused = true;

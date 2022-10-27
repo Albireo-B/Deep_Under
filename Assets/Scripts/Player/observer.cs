@@ -11,7 +11,7 @@ public class observer : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        
+        activeCamera.active = true;
     }
 
     // Update is called once per frame

@@ -105,14 +105,20 @@ namespace Photon.Pun.DeepUnder
                 Vector3 normalizedDirection = new Vector3(horizontal, 0, vertical).normalized;
                 body.velocity = normalizedDirection * speed;
                 if (gameManager.CheckGameEnded()){
-                    if (!animator.GetBool("Death")){
-                        animator.SetBool("Death",true);
-                        playerAudioSource.clip = deathScream;
-                        playerAudioSource.Play();
-                        playerAudioSource.loop = false;
-                        playerAudioSource.pitch = 1;
-                        GetComponent<Animation>().Play();
+                    playerAudioSource.Stop();
+                    if (!gameManager.GetGameWon())
+                    {
+                        playerAudioSource.Stop();
+                        if (!animator.GetBool("Death")){
+                            animator.SetBool("Death",true);
+                            playerAudioSource.clip = deathScream;
+                            playerAudioSource.Play();
+                            playerAudioSource.loop = false;
+                            playerAudioSource.pitch = 1;
+                            GetComponent<Animation>().Play();
+                        }
                     }
+
                 } else 
                 {
                     float newSpeed;

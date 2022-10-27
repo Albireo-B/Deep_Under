@@ -44,7 +44,10 @@ namespace Photon.Pun.DeepUnder
             gameWon = newGameWon;
 
         }
-
+        public bool GetGameWon()
+        {
+            return gameWon;
+        }
         public void Quit()
         {
             Application.Quit();

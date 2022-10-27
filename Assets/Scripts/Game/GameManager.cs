@@ -34,6 +34,7 @@ namespace Photon.Pun.DeepUnder
         [Header("Game End")]
         [SerializeField] private GameObject endGameCanvas;
         [SerializeField] private GameObject deathScreen;
+        private Sprite victoryScreen;
         private bool gameEnded;
         
         [Header("Menu")]
@@ -44,6 +45,8 @@ namespace Photon.Pun.DeepUnder
         }
         private void Start() {
             
+            victoryScreen = Resources.Load<Sprite>("VictoryScreen");
+
             gameEnded = false;
 
             clues = new List<GameObject>();
@@ -177,8 +180,16 @@ namespace Photon.Pun.DeepUnder
                 //To avoid the monster collider to push the player or force itself into walls
                 Destroy(runnerView.transform.Find("Monster").gameObject);
                 runnerView.transform.Find("HUD").gameObject.SetActive(false);
+                if (newValGameWon)
+                {
+                    Image img = deathScreen.transform.GetChild(0).gameObject.GetComponent<Image>();
+                    img.sprite = victoryScreen;
+                    img.color = new Color(img.color.r,img.color.g,img.color.b,0);
+                }
+
                 StartCoroutine(DelayedDeathScreenAnimation());
             } else {
+                observerView.transform.Find("camerabuttonCanvas").gameObject.SetActive(false);
                 Destroy(runnerView.transform.Find("Monster").gameObject);
                 Destroy(runnerView.transform.Find("Player").gameObject);
                 endGameCanvas.SetActive(true);
@@ -195,8 +206,13 @@ namespace Photon.Pun.DeepUnder
         IEnumerator DelayedDeathScreenAnimation ()
         {
             yield return new WaitForSeconds(2.5f);
-            deathScreen.active = true;
+            deathScreen.SetActive(true);
             deathScreen.GetComponent<Animation>().Play();
+        }
+
+        public bool GetGameWon()
+        {
+            return GetComponent<EndGameScript>().GetGameWon();;
         }
 
         public void SetGameWon(bool newVal)
@@ -228,7 +244,6 @@ namespace Photon.Pun.DeepUnder
             ResumeGame();
             if (PhotonNetwork.IsMasterClient){
                 SpawnClues();
-                runnerView.transform.Find("Player").gameObject.GetComponent<AudioSource>().Play();
             }
         }
 

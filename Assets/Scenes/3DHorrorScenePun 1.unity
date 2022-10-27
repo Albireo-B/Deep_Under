@@ -10136,7 +10136,7 @@ MonoBehaviour:
   ui_infoText: {fileID: 881257964}
   countdownCanvas: {fileID: 847676122}
   possibleClues: {fileID: 2071104796}
-  gameCluesNb: 5
+  gameCluesNb: 4
   endGameCanvas: {fileID: 1734144748}
   deathScreen: {fileID: 1505704824}
   menuCanvas: {fileID: 1362373689}

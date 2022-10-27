@@ -5920,6 +5920,10 @@ PrefabInstance:
       propertyPath: ui
       value: 
       objectReference: {fileID: 681065681}
+    - target: {fileID: 2997904027522772378, guid: 2beef53f53ee2cf498cf6230da5548b6, type: 3}
+      propertyPath: speed
+      value: 17
+      objectReference: {fileID: 0}
     - target: {fileID: 2997904027522772379, guid: 2beef53f53ee2cf498cf6230da5548b6, type: 3}
       propertyPath: m_RootOrder
       value: 12
@@ -5963,6 +5967,10 @@ PrefabInstance:
     - target: {fileID: 2997904027522772379, guid: 2beef53f53ee2cf498cf6230da5548b6, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5565029275943174193, guid: 2beef53f53ee2cf498cf6230da5548b6, type: 3}
+      propertyPath: m_Intensity
+      value: 2
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 2beef53f53ee2cf498cf6230da5548b6, type: 3}
@@ -7392,7 +7400,7 @@ MonoBehaviour:
   ui_infoText: {fileID: 881257964}
   countdownCanvas: {fileID: 847676122}
   possibleClues: {fileID: 2071104796}
-  gameCluesNb: 3
+  gameCluesNb: 5
   endGameCanvas: {fileID: 1734144748}
   deathScreen: {fileID: 1505704824}
   menuCanvas: {fileID: 1362373689}

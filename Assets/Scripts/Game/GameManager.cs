@@ -173,7 +173,6 @@ namespace Photon.Pun.DeepUnder
             SetGameWon(newValGameWon);
             double gameTime = GetComponent<MatchTimer>().GetGameTime();
             
-            runnerView.GetComponent<BackgroundVoiceScript>().enabled = false;
             if (PhotonNetwork.IsMasterClient)
             {
                 runnerView.transform.Find("Player").gameObject.GetComponent<Rigidbody>().constraints = RigidbodyConstraints.FreezeAll;
@@ -199,6 +198,8 @@ namespace Photon.Pun.DeepUnder
                     clue.transform.Find("ClueIconTransform").gameObject.SetActive(false);
                 }
             }
+            
+            runnerView.GetComponent<BackgroundVoiceScript>().enabled = false;
             GetComponent<EndGameScript>().DisplayInfos(gameTime);
         }
 

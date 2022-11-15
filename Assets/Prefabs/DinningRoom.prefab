@@ -14,7 +14,7 @@ GameObject:
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
+  m_StaticEditorFlags: 2147483647
   m_IsActive: 1
 --- !u!4 &2102442856524751354
 Transform:
@@ -96,6 +96,14 @@ PrefabInstance:
       propertyPath: m_Name
       value: BloodDinningRoom
       objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: 438c2560bb1a2e94088b50f25953b088, type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 2147483647
+      objectReference: {fileID: 0}
+    - target: {fileID: 8164078558771037576, guid: 438c2560bb1a2e94088b50f25953b088, type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 2147483647
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 438c2560bb1a2e94088b50f25953b088, type: 3}
 --- !u!4 &1726242211842544981 stripped
@@ -161,6 +169,14 @@ PrefabInstance:
     - target: {fileID: 919132149155446097, guid: 27ef866f924967f4a89ff1d5d200c8d2, type: 3}
       propertyPath: m_Name
       value: TableAndChairDinningRoom
+      objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: 27ef866f924967f4a89ff1d5d200c8d2, type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 2147483647
+      objectReference: {fileID: 0}
+    - target: {fileID: 8164078558771037576, guid: 27ef866f924967f4a89ff1d5d200c8d2, type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 2147483647
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 27ef866f924967f4a89ff1d5d200c8d2, type: 3}
@@ -257,6 +273,14 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 2102442856524751354}
     m_Modifications:
+    - target: {fileID: 323801795548920999, guid: 281d850f886e4b24b96a36449bd22a77, type: 3}
+      propertyPath: m_Layer
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4757594159979885689, guid: 281d850f886e4b24b96a36449bd22a77, type: 3}
+      propertyPath: m_Layer
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 5968121598082811148, guid: 281d850f886e4b24b96a36449bd22a77, type: 3}
       propertyPath: m_Name
       value: Doors
@@ -371,6 +395,14 @@ PrefabInstance:
       propertyPath: m_Name
       value: DinningRoom (1)
       objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: be47480427a343741819a9e4e63ccb6c, type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 2147483647
+      objectReference: {fileID: 0}
+    - target: {fileID: 8164078558771037576, guid: be47480427a343741819a9e4e63ccb6c, type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 2147483647
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: be47480427a343741819a9e4e63ccb6c, type: 3}
 --- !u!1 &1597147868434131180 stripped
@@ -455,6 +487,14 @@ PrefabInstance:
     - target: {fileID: 919132149155446097, guid: 37b359ded04708d4595b9c5d0a80a632, type: 3}
       propertyPath: m_Name
       value: BodysDinningRoom
+      objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: 37b359ded04708d4595b9c5d0a80a632, type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 2147483647
+      objectReference: {fileID: 0}
+    - target: {fileID: 8164078558771037576, guid: 37b359ded04708d4595b9c5d0a80a632, type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 2147483647
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 37b359ded04708d4595b9c5d0a80a632, type: 3}

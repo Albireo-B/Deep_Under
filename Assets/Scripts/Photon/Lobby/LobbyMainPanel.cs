@@ -8,6 +8,10 @@ namespace Photon.Pun.DeepUnder
 {
     public class LobbyMainPanel : MonoBehaviourPunCallbacks
     {
+        [Header("Audio")]
+        public GameObject menuAudio;
+        private AudioSource buttonClick;
+
         [Header("Menu Panel")]
         public GameObject MenuPanel;
 
@@ -30,7 +34,6 @@ namespace Photon.Pun.DeepUnder
 
         [Header("Room List Panel")]
         public GameObject RoomListPanel;
-
         public GameObject RoomListContent;
         public GameObject RoomListEntryPrefab;
 
@@ -54,6 +57,9 @@ namespace Photon.Pun.DeepUnder
             roomListEntries = new Dictionary<string, GameObject>();
             
             PlayerNameInput.text = "Player " + Random.Range(1000, 10000);
+
+            buttonClick = menuAudio.GetComponents<AudioSource>()[1];
+
         }
 
         #endregion
@@ -210,6 +216,11 @@ namespace Photon.Pun.DeepUnder
 
         #region UI CALLBACKS
 
+
+        public void PlayButtonClickedSound()
+        {
+            buttonClick.Play();
+        }
 
         public void OnQuitClicked()
         {

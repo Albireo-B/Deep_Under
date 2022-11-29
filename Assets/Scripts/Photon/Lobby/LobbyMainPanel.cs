@@ -322,7 +322,7 @@ namespace Photon.Pun.DeepUnder
         {
             PhotonNetwork.CurrentRoom.IsOpen = false;
             PhotonNetwork.CurrentRoom.IsVisible = false;
-
+            InsideRoomPanel.transform.Find("LeaveGameButton").gameObject.SetActive(false);
             PhotonNetwork.LoadLevel("3DHorrorScenePun 1");
         }
 

@@ -9683,7 +9683,7 @@ AudioSource:
   OutputAudioMixerGroup: {fileID: 0}
   m_audioClip: {fileID: 0}
   m_PlayOnAwake: 0
-  m_Volume: 0.8
+  m_Volume: 0.2
   m_Pitch: 1
   Loop: 0
   Mute: 0
@@ -9800,7 +9800,7 @@ AudioSource:
   Mute: 0
   Spatialize: 0
   SpatializePostEffects: 0
-  Priority: 123
+  Priority: 0
   DopplerLevel: 1
   MinDistance: 1
   MaxDistance: 500
@@ -9890,7 +9890,7 @@ AudioSource:
   OutputAudioMixerGroup: {fileID: 24300002, guid: fdd1087908ee18646845aa0523f4f346, type: 2}
   m_audioClip: {fileID: 0}
   m_PlayOnAwake: 0
-  m_Volume: 1
+  m_Volume: 0.2
   m_Pitch: 1
   Loop: 0
   Mute: 0
@@ -10263,6 +10263,7 @@ MonoBehaviour:
   observerposteffects: {fileID: 466504040}
   ui_infoText: {fileID: 881257964}
   countdownCanvas: {fileID: 847676122}
+  clueUnlockingSpeedModifier: 2
   possibleClues: {fileID: 2071104796}
   gameCluesNb: 4
   endGameCanvas: {fileID: 1734144748}

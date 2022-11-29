@@ -81,9 +81,12 @@ namespace Photon.Pun.DeepUnder
                     {
                         pickingClue = true;
                         ui.transform.Find("loading").gameObject.SetActive(true);
-                        ui.transform.Find("loading").GetComponent<UnityEngine.UI.Slider>().value += 0.3f;
-                        if (!cluesAudioSource.isPlaying)
+                        ui.transform.Find("loading").GetComponent<UnityEngine.UI.Slider>().value += gameManager.GetClueUnlockingSpeedModifier() * 0.1f;
+                        Debug.Log(cluesAudioSource.clip.name);
+                        if (!cluesAudioSource.isPlaying){
+                            Debug.Log("Playing clip");
                             cluesAudioSource.Play();
+                        }
                     }
 
                 }

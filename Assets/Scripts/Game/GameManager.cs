@@ -29,6 +29,8 @@ namespace Photon.Pun.DeepUnder
         [SerializeField] private GameObject countdownCanvas;
         
         [Header("Clues")]
+        
+        [SerializeField] private float clueUnlockingSpeedModifier;
         [SerializeField] private GameObject possibleClues;
         [SerializeField] private int gameCluesNb;
         private List<GameObject> clues;
@@ -106,6 +108,11 @@ namespace Photon.Pun.DeepUnder
         public int GetGameCluesNb()
         {
             return gameCluesNb;
+        }
+
+        public float GetClueUnlockingSpeedModifier()
+        {
+            return clueUnlockingSpeedModifier;
         }
 
         public int GetNumberOfProofsFound()

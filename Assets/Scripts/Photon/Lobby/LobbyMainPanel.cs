@@ -8,6 +8,9 @@ namespace Photon.Pun.DeepUnder
 {
     public class LobbyMainPanel : MonoBehaviourPunCallbacks
     {
+        [Header("Menu Panel")]
+        public GameObject MenuPanel;
+
         [Header("Login Panel")]
         public GameObject LoginPanel;
 
@@ -230,8 +233,7 @@ namespace Photon.Pun.DeepUnder
 
         public void OnPlayClicked()
         {
-            transform.Find("MenuPanel").gameObject.SetActive(false);
-            transform.Find("LoginPanel").gameObject.SetActive(true);
+            SetActivePanel(LoginPanel.name);
         }
         
         public void OnBackButtonClicked()
@@ -242,6 +244,16 @@ namespace Photon.Pun.DeepUnder
             }
 
             SetActivePanel(SelectionPanel.name);
+        }
+
+        public void OnBackToMenuButtonClicked()
+        {
+            if (PhotonNetwork.IsConnected)
+            {
+                PhotonNetwork.Disconnect();
+            }
+
+            SetActivePanel(MenuPanel.name);
         }
 
         public void OnCreateRoomButtonClicked()
@@ -348,6 +360,7 @@ namespace Photon.Pun.DeepUnder
 
         public void SetActivePanel(string activePanel)
         {
+            MenuPanel.SetActive(activePanel.Equals(MenuPanel.name));
             LoginPanel.SetActive(activePanel.Equals(LoginPanel.name));
             SelectionPanel.SetActive(activePanel.Equals(SelectionPanel.name));
             CreateRoomPanel.SetActive(activePanel.Equals(CreateRoomPanel.name));

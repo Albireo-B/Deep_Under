@@ -46,6 +46,7 @@ namespace Photon.Pun.DeepUnder
             playerAudioSource.clip = hearthSound;
             playerAudioSource.loop = true;
             playerAudioSource.Play();
+            ui.transform.Find("TopRightPanel").Find("Clues").GetComponent<UnityEngine.UI.Text>().text = "Clues : "+ gameManager.GetNumberOfProofsFound() + " / " + gameManager.GetGameCluesNb();
 
             
         }
@@ -59,7 +60,7 @@ namespace Photon.Pun.DeepUnder
                 
                 horizontal = Input.GetAxis("Horizontal");
                 vertical = Input.GetAxis("Vertical");
-                if (Input.GetKey("space") && atTheDoor && gameManager.GetNumberOfProofsFound() == gameManager.GetGameCluesNb())
+                if (Input.GetKey("space") && atTheDoor && gameManager.GetNumberOfProofsFound() >= gameManager.GetGameCluesNb())
                 {
                     ApplicationModel.ending = 1;
                     gameManager.photonView.RPC("EndGame",RpcTarget.All,true);

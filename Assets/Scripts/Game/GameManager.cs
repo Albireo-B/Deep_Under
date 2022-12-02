@@ -6,6 +6,7 @@ using Photon.Realtime;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 using System.Collections;
+using UnityEngine.Video;
 
 namespace Photon.Pun.DeepUnder
 {
@@ -48,6 +49,8 @@ namespace Photon.Pun.DeepUnder
         private void Awake() {
             if (Instance == null) { Instance = this; } 
         }
+
+        [System.Obsolete]
         private void Start() {
             
             victoryScreen = Resources.Load<Sprite>("VictoryScreen");
@@ -182,6 +185,7 @@ namespace Photon.Pun.DeepUnder
         [PunRPC]
         public void EndGame(bool newValGameWon)
         {
+     
             gameEnded = true;
             GetComponent<MatchTimer>().SetTimerStarted(false);
             SetGameWon(newValGameWon);
@@ -195,10 +199,10 @@ namespace Photon.Pun.DeepUnder
                 runnerView.transform.Find("HUD").gameObject.SetActive(false);
                 if (newValGameWon)
                 {
-                    Image img = deathScreen.transform.GetChild(0).gameObject.GetComponent<Image>();
+                    Image img = deathScreen.transform.GetChild(2).gameObject.GetComponent<Image>();
                     img.sprite = victoryScreen;
-                    img.color = new Color(img.color.r,img.color.g,img.color.b,0);
-                }
+                    img.color = new Color(img.color.r,img.color.g,img.color.b,0);               
+                } 
 
                 StartCoroutine(DelayedDeathScreenAnimation());
             } else {
@@ -214,15 +218,40 @@ namespace Photon.Pun.DeepUnder
             }
             
             runnerView.GetComponent<BackgroundVoiceScript>().enabled = false;
+            runnerView.GetComponents<AudioSource>()[1].enabled = false;
+            
             GetComponent<EndGameScript>().DisplayInfos(gameTime);
         }
 
         // The delay coroutine
         IEnumerator DelayedDeathScreenAnimation ()
         {
-            yield return new WaitForSeconds(2.5f);
             deathScreen.SetActive(true);
+
+            if (GetGameWon()){
+                deathScreen.GetComponent<Animation>().clip = deathScreen.GetComponent<Animation>().GetClip("BlackTransition");
+                deathScreen.GetComponent<Animation>().Play();
+
+                yield return new WaitForSeconds(2f);
+
+                deathScreen.transform.GetChild(1).gameObject.SetActive(true);
+                VideoPlayer videoPlayer = deathScreen.transform.GetChild(1).gameObject.GetComponent<VideoPlayer>();
+                videoPlayer.Play();
+
+                yield return new WaitForSeconds(2f);
+                deathScreen.GetComponent<Animation>().Play();
+
+                yield return new WaitForSeconds(2f);
+                deathScreen.GetComponent<Animation>().Stop();
+                deathScreen.transform.GetChild(1).gameObject.SetActive(false);
+                deathScreen.transform.GetChild(0).gameObject.GetComponent<Image>().color = new Color(0,0,0,255);
+            } else {
+                yield return new WaitForSeconds(2.5f);
+            }
+            deathScreen.GetComponent<Animation>().clip = deathScreen.GetComponent<Animation>().GetClip("PlayerDeathText");
             deathScreen.GetComponent<Animation>().Play();
+
+
         }
 
         public bool GetGameWon()
